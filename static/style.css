@@ -1,0 +1,136 @@
+/* General Body Styling (inherits from previous) */
+#index-page body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Centered Container Styling */
+#index-page center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: auto; /* Adjust for dynamic content */
+    padding: 20px;
+}
+
+/* Table Styling */
+#index-page table {
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+    border-spacing: 15px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Input Fields Styling */
+#index-page input[type="text"],
+#index-page input[type="email"],
+#index-page input[type="password"],
+#index-page input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+/* Buttons Styling */
+#index-page input[type="submit"],
+#index-page input[type="button"],
+#index-page button[type="button"],
+#index-page input[type="reset"]{
+    width: auto;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#index-page input[type="submit"]:hover,
+#index-page input[type="button"]:hover,
+#index-page button[type="button"]:hover,
+#index-page input[type="reset"]:hover{
+    background-color: #0056b3;
+}
+
+/* Headings Styling */
+#index-page h1 {
+    color: #333;
+    font-size: 2.5em;
+    margin-bottom: 10px;
+}
+
+#index-page h3 {
+    color: #555;
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+/* Gender Radio Buttons Styling */
+#index-page label {
+    margin-right: 10px;
+    font-size: 1em;
+    color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    #index-page h1 {
+        font-size: 2em;
+    }
+
+    #index-page h3 {
+        font-size: 1.2em;
+    }
+
+    #index-page input[type="submit"],
+    #index-page input[type="button"] {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+
+    #index-page input[type="text"],
+    #index-page input[type="email"],
+    #index-page input[type="password"],
+    #index-page input[type="date"]
+    {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+}
+#navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f4f4f4;
+    padding: 10px 20px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#navbar>div {
+    margin: 0 10px;
+}
+
+#search input[type="search"] {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.admin-navbar>div {
+    white-space: nowrap;
+    /* Prevent text wrapping */
+}
+

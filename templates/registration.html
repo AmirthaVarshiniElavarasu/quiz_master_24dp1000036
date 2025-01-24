@@ -1,0 +1,48 @@
+{% extends "index.html" %}
+
+{% block content %}
+<center>
+
+
+    <h1>Welcome to Quiz Master</h1>
+    <h3>Registration Page</h3>
+    <form method="POST" action="{{ url_for('registration') }}">
+        <table>
+            <tr>
+                <td><label for="email">Username(Email):</label></td>
+                <td><input type="email" id="email" placeholder="Enter your email-ID"></td>
+            </tr>
+            <tr>
+                <td><label for="password">Password:</label></td>
+                <td><input type="password" id="password" placeholder="Create a password"></td>
+            </tr>
+            <tr>
+                <td><label for="Fullname">Full name:</label></td>
+                <td><input type="text" id="Fullname" placeholder="Enter your name"></td>
+            </tr>
+            <tr>
+                <td><label for="Qualification">Qualification:</label></td>
+                <td><input type="text" id="Qualification" placeholder="Enter your qualification"></td>
+            </tr>
+            <tr>
+                <td>Gender:</td>
+                <td>
+                    <label for="gender"><input name="gender" type="radio">Male </label>
+                    <label for="gender"><input name="gender" type="radio">Female </label>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td><label for="date">Date of Birth:</label></td>
+                <td><input type="date" id="date"  ></td>
+            </tr>
+            <tr>
+                <td><input type="submit" ></td>
+                <td><input type="reset" ></td>
+                <td><a href="{{ url_for('Login') }}"></a><input type="button" value="Existing User?"></a></td>
+            </tr>
+        </table>
+    </form>
+</center>
+
+{% endblock %}

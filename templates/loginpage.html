@@ -1,0 +1,30 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<center>
+
+    <div>
+
+        <h1>Welcome to Quiz Master</h1>
+        <h3>Log in Page</h3>
+        <form>
+            <table>
+                <tr>
+                    <td><label for="lguser">Username:</label></td>
+                    <td><input type="text" placeholder="Username or Email-ID" id="lguser"></td>
+                </tr>
+                <tr>
+                    <td><label for="lgpassword">Password:</label></td>
+                    <td><input type="password" placeholder="Enter your password" id="lgpassword"></td>
+                </tr>
+                <tr>
+                    <td><input type="button" value="Log in"></td>
+                    <td><input type="button" value="Registration"></td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+</center>
+{% endblock %}

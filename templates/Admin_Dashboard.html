@@ -1,0 +1,48 @@
+{% extends 'index.html' %}
+
+{% block content %}
+
+<div id="navbar" class="admin-navbar">
+    <div id="home" class="admin-home">
+        Home
+    </div>
+    <div id="quiz" class="admin-quiz">
+        Quiz
+    </div>
+    <div id="summary" class="admin-summary">
+        Summary
+    </div>
+    <div id="logout" class="admin-logout">
+        Logout
+    </div>
+    <div id="search" class="admin-search">
+        <input type="search" placeholder="Search here">
+    </div>
+    <div>Welcome Admin</div>
+</div>
+<center>
+<div id="adminsub">
+    <table>
+        <tr>
+            <td></td>
+            <td>PHYSICS</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Chapter Name</td>
+            <td>No.of Questions</td>
+            <td>Action</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type="button" value="+ Chapter"></td>
+        </tr>
+    </table>
+    <button type="button">+</button>
+
+</div>
+
+</center>
+
+
+{% endblock %}
