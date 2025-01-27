@@ -1,5 +1,5 @@
 {% extends "index.html" %}
-
+{% block title %} User Login Page {% endblock %}
 {% block content %}
 
 <center>
@@ -8,19 +8,20 @@
 
         <h1>Welcome to Quiz Master</h1>
         <h3>Log in Page</h3>
-        <form>
+        <form method="POST" action="{{ url_for('Login') }}">
             <table>
                 <tr>
-                    <td><label for="lguser">Username:</label></td>
-                    <td><input type="text" placeholder="Username or Email-ID" id="lguser"></td>
+                    <td><label for="email">Username:</label></td>
+                    <td><input type="email" placeholder="Email-ID" id="email"name="email" required></td>
                 </tr>
                 <tr>
-                    <td><label for="lgpassword">Password:</label></td>
-                    <td><input type="password" placeholder="Enter your password" id="lgpassword"></td>
+                    <td><label for="password">Password:</label></td>
+                    <td><input type="password" placeholder="Enter your password" id="password" name="password" required></td>
                 </tr>
                 <tr>
-                    <td><input type="button" value="Log in"></td>
-                    <td><input type="button" value="Registration"></td>
+                    <td><input type="submit" value="Log in"></td>
+                    <td><a href="{{ url_for('registration') }}"><input type="button" value="Registration"></a></td>
+                    <td><a href="{{ url_for('Admin_Login') }}"><input type="button" value="Admin Login"></a></td>
                 </tr>
             </table>
         </form>

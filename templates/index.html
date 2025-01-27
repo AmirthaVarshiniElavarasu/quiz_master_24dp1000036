@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Page</title>
+    
+    <title>{% block title %} Index Page {% endblock %}</title>
+    
     <link rel="stylesheet" href="static/style.css">
 
 
@@ -26,6 +28,9 @@
                     <tr>
                         <td>
                             <a href="{{ url_for('Login') }}"><input type="button" value="Log in" id="loginbutton"></a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('Admin_Login') }}"><input type="button" value="Admin Log in" id="adminloginbutton"></a>
                         </td>
                         <td><a href="{{ url_for('registration') }}"><input type="button" value="Registration" id="registbutton"></a></td>
                     </tr>

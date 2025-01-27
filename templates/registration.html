@@ -1,48 +1,47 @@
 {% extends "index.html" %}
+{% block title %} Registration {% endblock %}
 
 {% block content %}
 <center>
-
-
     <h1>Welcome to Quiz Master</h1>
     <h3>Registration Page</h3>
     <form method="POST" action="{{ url_for('registration') }}">
         <table>
             <tr>
-                <td><label for="email">Username(Email):</label></td>
-                <td><input type="email" id="email" placeholder="Enter your email-ID"></td>
+                <td><label for="email">Username (Email):</label></td>
+                <td><input type="email" id="email" name="email" placeholder="Enter your email-ID" required></td>
             </tr>
             <tr>
                 <td><label for="password">Password:</label></td>
-                <td><input type="password" id="password" placeholder="Create a password"></td>
+                <td><input type="password" id="password" name="password" placeholder="Create a password" required></td>
             </tr>
             <tr>
-                <td><label for="Fullname">Full name:</label></td>
-                <td><input type="text" id="Fullname" placeholder="Enter your name"></td>
+                <td><label for="username">Name:</label></td>
+                <td><input type="text" id="username" name="username" placeholder="Enter your name" required></td>
             </tr>
             <tr>
-                <td><label for="Qualification">Qualification:</label></td>
-                <td><input type="text" id="Qualification" placeholder="Enter your qualification"></td>
+                <td><label for="qualification">Qualification:</label></td>
+                <td><input type="text" id="qualification" name="qualification" placeholder="Enter your qualification" required></td>
             </tr>
             <tr>
-                <td>Gender:</td>
+                <td><label for="gender">Gender:</label></td>
                 <td>
-                    <label for="gender"><input name="gender" type="radio">Male </label>
-                    <label for="gender"><input name="gender" type="radio">Female </label>
-                    
+                    <select name="gender" id="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
                 </td>
             </tr>
             <tr>
-                <td><label for="date">Date of Birth:</label></td>
-                <td><input type="date" id="date"  ></td>
+                <td><label for="dob">Date of Birth:</label></td>
+                <td><input type="date" id="dob" name="dob" required></td>
             </tr>
             <tr>
-                <td><input type="submit" ></td>
-                <td><input type="reset" ></td>
-                <td><a href="{{ url_for('Login') }}"></a><input type="button" value="Existing User?"></a></td>
+                <td><input type="submit" value="Register"></td>
+                <td><input type="reset" value="Reset"></td>
+                <td><a href="{{ url_for('Login') }}"><input type="button" value="Existing User?"></a></td>
             </tr>
         </table>
     </form>
 </center>
-
 {% endblock %}

@@ -1,10 +1,10 @@
 {% extends 'index.html' %}
-
-{% block content %}
+{% block title %} Admin Dash Board {% endblock %}
+{% block navbar %}
 
 <div id="navbar" class="admin-navbar">
     <div id="home" class="admin-home">
-        Home
+        <a href="{{ url_for('admindb') }}">home</a>
     </div>
     <div id="quiz" class="admin-quiz">
         Quiz
@@ -12,35 +12,38 @@
     <div id="summary" class="admin-summary">
         Summary
     </div>
-    <div id="logout" class="admin-logout">
-        Logout
+    <div id="logout" class="User-logout">
+        <a href="{{ url_for('Admin_Logout') }}">Logout</a>
     </div>
     <div id="search" class="admin-search">
         <input type="search" placeholder="Search here">
     </div>
-    <div>Welcome Admin</div>
+    <div>Welcome {{ user }}</div>
 </div>
-<center>
-<div id="adminsub">
-    <table>
-        <tr>
-            <td></td>
-            <td>PHYSICS</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Chapter Name</td>
-            <td>No.of Questions</td>
-            <td>Action</td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="button" value="+ Chapter"></td>
-        </tr>
-    </table>
-    <button type="button">+</button>
+{% endblock %}
 
-</div>
+{% block content %}
+<center>
+    <div id="adminsub">
+        <table>
+            <tr>
+                <td></td>
+                <td>PHYSICS</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Chapter Name</td>
+                <td>No.of Questions</td>
+                <td>Action</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="button" value="+ Chapter"></td>
+            </tr>
+        </table>
+        <button type="button">+</button>
+
+    </div>
 
 </center>
 

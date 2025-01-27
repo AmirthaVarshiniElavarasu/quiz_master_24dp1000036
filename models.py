@@ -1,39 +1,87 @@
+from sqlalchemy import Date
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 data=SQLAlchemy()
 
 class User(data.Model):
-    __table__='user'
+    __tablename__='user'
     id=data.Column(data.Integer,primary_key=True)
     username=data.Column(data.String(50),nullable=False)
-    Email=data.Column(data.String(150),nullable=False,unique=True)
+    email=data.Column(data.String(150),nullable=False,unique=True)
     password=data.Column(data.String(200),nullable=False)
-    Qualification=data.Column(data.String(150),nullable=False)
-    Gender=data.Column(data.String(6),nullable=False)
-    dob=data.Column(data.DateTime(),nullable=False)
+    qualification=data.Column(data.String(150),nullable=False)
+    gender=data.Column(data.String(6),nullable=False)
+    dob=data.Column(Date,nullable=False)
+    scores=data.relationship('Scores',backref='User',lazy=True)
     
 
 class Subject(data.Model):
-    __table__='sub'
+    __tablename__='sub'
     sub_id=data.Column(data.Integer,primary_key=True)
-    sub_name=data.Column(data.String(50),nullable=False,unique=False)
-    sub_Description=data.Column(data.String(200),nullable=True)
-    sub_post=data.Column('Chapter')
+    sub_name=data.Column(data.String(50),nullable=False)
+    sub_Description=data.Column(data.Text,nullable=True)
+    sub_chap=data.relationship('Chapter',backref='Subject',lazy=True)
     
 class Chapter(data.Model):
-    __table__='chap'
+    __tablename__='chap'
     chap_id=data.Column(data.Integer,primary_key=True)
-    chap_title=data.Column(data.String(200),nullable=False,unique=False)
-    chap_Description=data.Column(data.String(200),nullable=False)
-    user_id=data.Column(data.Integer,data.ForeignKey('user.id'),nullable=False)
+    chap_title=data.Column(data.String(200),nullable=False)
+    chap_description=data.Column(data.Text,nullable=False)
+    chap_quiz=data.relationship('Quiz',backref='Chapter',lazy=True)
+    sub_id=data.Column(data.Integer,data.ForeignKey('sub.sub_id'),nullable=False)
+
+    
 
 class Quiz(data.Model):
-    __table__='quizzes'
-    _id=data.Column(data.Integer,primary_key=True)
-    chap_title=data.Column(data.String(200),nullable=False,unique=False)
-    chap_Description=data.Column(data.String(200),nullable=False)
-    chap_id=data.Column(data.Integer,data.ForeignKey('.id'),nullable=False)
+    __tablename__='quizzes'
+    quiz_id=data.Column(data.Integer,primary_key=True)
+    quiz_title=data.Column(data.String(200),nullable=False)
+    quiz_description=data.Column(data.String(200),nullable=False)
+    chap_id=data.Column(data.Integer,data.ForeignKey('chap.chap_id'),nullable=False)
+    quiz_date=data.Column(data.Date,nullable=False)
+    quiz_time=data.Column(data.Time,nullable=False)
+    quiz_score=data.relationship('Scores',backref='Quiz',lazy=True)
+
+    
+class Questions(data.Model):
+    __tablename__="question"
+    ques_id=data.Column(data.Integer,primary_key=True)
+    ques_statement=data.Column(data.Text,nullable=False)
+    options=data.relationship('Option',backref='question',cascade='all,delete-orphan',lazy=True,foreign_keys='Option.op_ques_id')
+    correct_option=data.Column(data.Integer,data.ForeignKey('options.op_id'),nullable=False)
+
+    def __repr__(self):
+        return f"<Question: {self.ques_statement}>"
+    
+class Option(data.Model):
+    __tablename__="options"
+    op_id=data.Column(data.Integer,primary_key=True)
+    op_statement=data.Column(data.Text,nullable=False)
+    op_ques_id=data.Column(data.Integer,data.ForeignKey('question.ques_id'),nullable=False)
+   
+    
+    def __repr__(self):
+        return f"<Option: {self.op_statement}>"
+
+
+class Scores(data.Model):
+    __tablename__="score"
+    score_id=data.Column(data.Integer,primary_key=True)
+    quiz_score_id=data.Column(data.Integer,data.ForeignKey('quizzes.quiz_id'),nullable=False)
+    user_score_id=data.Column(data.Integer,data.ForeignKey('user.id'),nullable=False)
+    score_time_stamp=data.Column(data.DateTime,nullable=False)
+    score_total=data.Column(data.Integer,nullable=False)
+
+class Admin(data.Model):
+    __tablename__="admin"
+    admin_id=data.Column(data.Integer,primary_key=True)
+    admin_username=data.Column(data.String(50),nullable=False)
+    admin_email=data.Column(data.String(150),nullable=False,unique=True)
+    admin_password=data.Column(data.String(200),nullable=False)
+    admin_role=data.Column(data.String(150),nullable=False)
+
+
     
 
 

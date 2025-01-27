@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+{% block title %} Admin Login Page {% endblock %}
+
+{% block content %}
+
+<center>
+
+    <div>
+
+        <h1>Welcome to Quiz Master</h1>
+        <h3>Admin Log in Page</h3>
+        <form method="POST" action="{{ url_for('Admin_Login') }}">
+            <table>
+                <tr>
+                    <td><label for="admin_email">Username:</label></td>
+                    <td><input type="email" placeholder="Email-ID" id="admin_email" name="admin_email" required></td>
+                </tr>
+                <tr>
+                    <td><label for="admin_password">Password:</label></td>
+                    <td><input type="password" placeholder="Enter your password" id="admin_password" name="admin_password" required></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" value="Log in"></td>
+                </tr>
+                <tr>
+                    <td><a href="{{ url_for('Login') }}"><input type="button" value="User Login"></a></td>
+                </tr>
+            </table>
+        </form>
+
+    </div>
+</center>
+{% endblock %}
