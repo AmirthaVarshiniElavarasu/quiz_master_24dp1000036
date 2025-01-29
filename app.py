@@ -131,7 +131,7 @@ def Admin_Login():
             flash('Invalid email or password.')
     return render_template('admin_login_page.html')
 
-@application.route('/Admin_Logout')
+@application.route('/Admin_Logout',method='GET')
 def Admin_Logout():
     session.pop('admin',None)
     flash('you have been logged out.')
@@ -146,6 +146,42 @@ def userdb():
     return render_template('User_Dashboard.html',user=session['name'])
 
 
+@application.route('admindb/create_subject',method=['GET','POST'])
+def create_subject():
+
+    if 'admin' not in session:
+        flash('Please Login to create a subject')
+        return redirect(url_for('Admin_Login'))
+
+    if request.method=='POST':
+        sub_name=request.form.get('new_sub_name')
+        sub_Description=request.form.get('new_sub_descrip')
+        sub_quiz_descrip=request.form.get('new_sub_quiz_descrip')
+
+        
+
+        new_sub=Subject(sub_name=sub_name,sub_Description=sub_Description,sub_quiz_descrip=sub_quiz_descrip)
+        data.session.add(new_sub)
+        data.session.commit()
+        flash(f"{ sub_name } Created Successfully")
+        return redirect(url_for('Admin_Login'))
+    return render_template('subject.html',action="Creation")
+
+@application.route('admindb/edit_subject/<int:sub_id>',method=['GET','POST'])
+def edit_subject(sub_id):
+    if 'admin' not in session:
+        flash('Please Login to create a subject')
+        return redirect("url_for('Admin_Login')")
+
+    subject=Subject.query.get_or_404(sub_id)
+    if request.method=='POST':
+        subject.sub_name=request.form.get('new_sub_name')
+        subject.sub_Description=request.form.get('new_sub_descrip')
+        subject.sub_quiz_descrip=request.form.get('new_sub_quiz_descrip')
+
+        flash(f"{ subject.sub_name } Edited Successfully")
+        return redirect(url_for('Admin_Login'))
+    return render_template('subject.html',action="Edit")
 
 
 with application.app_context():

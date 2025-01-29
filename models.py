@@ -19,14 +19,15 @@ class User(data.Model):
 class Subject(data.Model):
     __tablename__='sub'
     sub_id=data.Column(data.Integer,primary_key=True)
-    sub_name=data.Column(data.String(50),nullable=False)
+    sub_name=data.Column(data.String(50),nullable=False,unique=True)
     sub_Description=data.Column(data.Text,nullable=True)
+    sub_quiz_descrip=data.Column(data.Text,nullable=True)
     sub_chap=data.relationship('Chapter',backref='Subject',lazy=True)
     
 class Chapter(data.Model):
     __tablename__='chap'
     chap_id=data.Column(data.Integer,primary_key=True)
-    chap_title=data.Column(data.String(200),nullable=False)
+    chap_title=data.Column(data.String(200),nullable=False,unique=True)
     chap_description=data.Column(data.Text,nullable=False)
     chap_quiz=data.relationship('Quiz',backref='Chapter',lazy=True)
     sub_id=data.Column(data.Integer,data.ForeignKey('sub.sub_id'),nullable=False)

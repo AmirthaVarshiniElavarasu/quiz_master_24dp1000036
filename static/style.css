@@ -32,7 +32,8 @@
 #index-page input[type="text"],
 #index-page input[type="email"],
 #index-page input[type="password"],
-#index-page input[type="date"] {
+#index-page input[type="date"],
+#index-page button[type="submit"] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -45,7 +46,8 @@
 #index-page input[type="submit"],
 #index-page input[type="button"],
 #index-page button[type="button"],
-#index-page input[type="reset"]{
+#index-page input[type="reset"],
+#index-page button[type="submit"]{
     width: auto;
     padding: 10px 20px;
     background-color: #007BFF;
@@ -60,7 +62,9 @@
 #index-page input[type="submit"]:hover,
 #index-page input[type="button"]:hover,
 #index-page button[type="button"]:hover,
-#index-page input[type="reset"]:hover{
+#index-page input[type="reset"]:hover,
+#index-page button[type="submit"]:hover
+{
     background-color: #0056b3;
 }
 
@@ -95,7 +99,9 @@
     }
 
     #index-page input[type="submit"],
-    #index-page input[type="button"] {
+    #index-page input[type="button"],
+    #index-page button[type="submit"]
+    {
         font-size: 0.9em;
         padding: 8px 15px;
     }
@@ -103,7 +109,8 @@
     #index-page input[type="text"],
     #index-page input[type="email"],
     #index-page input[type="password"],
-    #index-page input[type="date"]
+    #index-page input[type="date"],
+    #index-page button[type="submit"]
     {
         font-size: 0.9em;
         padding: 8px;
