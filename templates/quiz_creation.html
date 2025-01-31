@@ -1,0 +1,56 @@
+{% extends 'index.html' %}
+{% block title %} Quiz Dash Board {% endblock %}
+
+{% block navbar %}
+{% include "admin-navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<center>
+    <h2> Quiz {{ action }}</h2>
+    <form action="POST"></form>
+    <div>
+        <table>
+            <tr>
+                <td><label for="quiz_chap_name">Chapter Name:</label></td>
+                <td><select name="quiz_chap_name" id="quiz_chap_name">
+                        {% for chapter in chapters %}
+
+                        <option value="{{ chapter.chap_id }}" data-id="{{ chapter.chap_id }}">{{ chapter.chap_title }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+
+                <td><label for="quiz_chap_id">Chapter ID:</label></td>
+                <td><input type="text" name="quiz_chap_id" id="quiz_chap_id" value="{{ chapters[0].chap_id }}" readonly>
+                </td>
+
+            </tr>
+            <tr>
+                <td><label for="quiz_title">Quiz Title</label></td>
+                <td><input type="text" name="quiz_title" id="quiz_title" value="{{ quiz_title }}"></td>
+            </tr>
+            <tr>
+                <td><label for="quiz_date">Quiz Start Date:</label></td>
+                <td><input type="date" name="quiz_date" id="quiz_date"></td>
+            </tr>
+            <tr>
+                <td><label for="quiz_duration">Quiz Duration:</label></td>
+                <td><input type="number" name="quiz_duration" id="quiz_duration_hours" min="0" max="2"
+                        placeholder="Hours" required>
+                    <input type="number" name="quiz_duration" id="quiz_duration_minute" min="0" max="59"
+                        placeholder="Minutes" required>
+                </td>
+            </tr>
+            <tr>
+                <td><button type="submit">Save</button></td>
+                <td><a href="{{ url_for('quiz_dashboard') }}"><button>Cancel</button></a></td>
+            </tr>
+        </table>
+
+    </div>
+</center>
+{% endblock %}

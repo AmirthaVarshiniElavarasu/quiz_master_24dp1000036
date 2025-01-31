@@ -1,33 +1,43 @@
 {% extends 'index.html' %}
 
-{% block title %} Chapter {% endblock %}
+{% block title %} {{ action }} Chapter {% endblock %}
+
+{% block navbar %}
+{% include 'admin-navbar.html' %}
+{% endblock %}
 
 {% block content %}
 <center>
-<table>
-    <tr>
-        <h3>New Chapter Creation</h3>
-    </tr>
-    <tr>
-        <td>
-            <label for="new_chap_name">Name: </label>
-        </td>
-        <td>
-            <input type="text" id="new_chap_name" name="new_chap_name">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label for="new_chap_descrip">Description: </label>
-        </td>
-        <td>
-            <input type="text" id="new_chap_descrip" name="new_chap_descrip">
-        </td>
-    </tr>
-    <tr>
-        <td><button type="submit">Save</button></td>
-        <td><button type="submit">Cancel</button></td>
-    </tr>
-</table>
+    <h2>{{ action }} Chapter</h2>
+    <form method="POST">
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <label for="new_chap_name">Chapter Name:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="new_chap_name" name="new_chap_name"
+                            value="{{ chapter.chap_title if chapter else '' }}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <label for="new_chap_descrip">Description:</label>
+                </td>
+                <td>
+                    <textarea id="new_chap_descrip" name="new_chap_descrip"required>{{ chapter.chap_description if chapter else '' }}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <input type="submit" value="{{ action }} Chapter">
+                </td>
+                <td><a href="{{ url_for('admindb') }}"><button type="button" >Cancel</button></a></td>
+
+                </tr>
+            </table>
+        </div>
+    </form>
 </center>
 {% endblock %}

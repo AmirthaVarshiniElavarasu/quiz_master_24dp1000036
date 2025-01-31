@@ -1,26 +1,6 @@
 {% extends 'index.html' %}
 {% block title %} User Dashboard {% endblock %}
 
-{% block  navbar %}
-
-<div id="navbar" class="User-navbar">
-    <div id="home" class="User-home">
-        <a href="{{ url_for('userdb') }}">home</a> 
-    </div>
-    <div id="quiz" class="User-quiz">
-        Quiz
-    </div>
-    <div id="summary" class="User">
-        Summary
-    </div>
-    <div id="logout" class="User-logout">
-        <a href="{{ url_for('Logout') }}">Logout</a>  
-    </div>
-    <div id="search" class="User-search">
-        <input type="search" placeholder="Search here">
-    </div>
-    <div>Welcome {{ user }}</div>
-    
-</div>
-
+{% block navbar %}
+{% include 'admin-navbar.html' %}
 {% endblock %}

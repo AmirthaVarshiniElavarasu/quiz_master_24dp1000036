@@ -1,14 +1,14 @@
 {% extends 'index.html' %}
-{% block title %} Admin Dash Board {% endblock %}
+{% block title %} Quiz Dash Board {% endblock %}
 
 {% block navbar %}
-{% include 'admin-navbar.html' %}
+{% include "admin-navbar.html" %}
 {% endblock %}
 
 {% block content %}
 <center>
-    <div id="adminsub">
-        {% for subject in Subjects %}
+    <div id="quizdashboard">
+        {% for quiz in quizzes %}
         <table>
             <tr>
 
@@ -48,18 +48,14 @@
             </tr>
         </table>
         {% endfor %}
-
     </div>
     <div>
         <table>
             <tr>
                 <td></td>
-                <td><a href="{{ url_for('create_subject') }}"><input type="button" value="Add Subject"></a></td>
+                <td><a href="{{ url_for('create_quiz') }}"><input type="button" value="Add quiz"></a></td>
             </tr>
         </table>
     </div>
-
 </center>
-
-
 {% endblock %}

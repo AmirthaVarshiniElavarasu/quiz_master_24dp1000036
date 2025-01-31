@@ -1,43 +1,52 @@
 {% extends 'index.html' %}
 
-{% block title %} Subject {% endblock %}
+{% block title %} {{ action }} Subject {% endblock %}
+
+{% block navbar %}
+{% include 'admin-navbar.html' %}
+{% endblock %}
 
 {% block content %}
 <center>
+    <h2>{{ action }} Subject</h2>
     <form method="POST">
-<table>
-    <tr>
-        <h3>Subject {{ action }}</h3>
-    </tr>
-    <tr>
-        <td>
-            <label for="new_sub_name">Name: </label>
-        </td>
-        <td>
-            <input type="text" id="new_sub_name" name="new_sub_name">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label for="new_sub_descrip">Description: </label>
-        </td>
-        <td>
-            <input type="text" id="new_sub_descrip" name="new_sub_descrip">
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <label for="new_sub_quiz_descrip">Quiz Important Notes: </label>
-        </td>
-        <td>
-            <input type="text" id="new_sub_quiz_descrip" name="new_sub_quiz_descrip">
-        </td>
-    </tr>
-    <tr>
-        <td><button type="submit">Save</button></td>
-        <td><button type="submit">Cancel</button></td>
-    </tr>
-</table>
-</form>
+        <div>
+            <table>
+                <tr>
+                    <td>
+                        <label for="new_sub_name">Subject Name:</label>
+                    </td>
+                    <td>
+                        <input type="text" id="new_sub_name" name="new_sub_name"
+                            value="{{ subject.sub_name if subject else '' }}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <label for="new_sub_descrip">Description:</label>
+                </td>
+                <td>
+                    <textarea id="new_sub_descrip" name="new_sub_descrip"
+                        required>{{ subject.sub_Description if subject else '' }}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <label for="new_sub_quiz_descrip">Quiz Description:</label>
+                </td>
+                <td>
+                    <textarea id="new_sub_quiz_descrip" name="new_sub_quiz_descrip"
+                        required>{{ subject.sub_quiz_descrip if subject else '' }}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    <input type="submit" value="{{ action }} Subject">
+                </td>
+                <td><a href="{{ url_for('admindb') }}"><button type="button" >Cancel</button></a></td>
+                </tr>
+            </table>
+        </div>
+    </form>
 </center>
 {% endblock %}
