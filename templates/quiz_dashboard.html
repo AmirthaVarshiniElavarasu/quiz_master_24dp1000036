@@ -12,40 +12,33 @@
         <table>
             <tr>
 
-                <td>{{ subject.sub_name }}</td>
-                <td><a href="{{ url_for('edit_subject',sub_id=subject.sub_id) }}"><i class="fa fa-edit"></a></td>
-                <td><a href="{{ url_for('delete_subject',sub_id=subject.sub_id) }}"><i class="fa fa-trash"></i></a></td>
-            </tr>
-
-            <tr>
-                <td>Chapters</td>
-                <td>No.of Quiz</td>
-                <td>action</td>
-            </tr>
-
-            {% for chapter in Chapters %}
-            {% if chapter.sub_id==subject.sub_id %}
-            <tr>
-                <td>{{ chapter.chap_title }}</td>
-                <td>{{ chapter.chap_title }}</td>
-                <td><a href="{{ url_for('edit_chapter',chap_id=chapter.chap_id,sub_id=subject.sub_id) }}"><i
-                            class="fa fa-edit"></i></a>
-                    <a href="{{ url_for('delete_chapter',chap_id=chapter.chap_id,sub_id=subject.sub_id) }}"><i
-                            class="fa fa-trash"></i></a>
+                <td>{{ quiz.quiz_title }}</td>
+                <td><a href="{{ url_for('edit_quiz',quiz_id=quiz.quiz_id) }}"><i class="fa fa-edit"></i></a>
+                    <a href="{{ url_for('delete_quiz',quiz_id=quiz.quiz_id) }}"><i class="fa fa-trash"></i></a>
                 </td>
+            </tr>
+
+            <tr>
+                <td>Quiz Id</td>
+                <td>Question Title</td>
+                <td>Action</td>
+            </tr>
+
+            {% for question in Question %}
+            {% if question.quiz_id == quiz.quiz_id %}
+            <tr>
+                <td>{{ question.quiz_id }}</td>
+                <td>{{ question.quiz_title }}</td>
+                
             </tr>
             {% endif %}
             {% endfor %}
             <tr>
                 <td></td>
-                <td><a href="{{ url_for('create_chapter',sub_id=subject.sub_id) }}"><input type="button"
-                            value="Add Chapter"></a></td>
+                <td><input type="button"
+                            value="Add Question"></a></td>
             </tr>
-            <tr>
-                <td>{{ subject.sub_Description }}</td>
-                <td>{{ subject.sub_quiz_descrip }}</td>
-
-            </tr>
+           
         </table>
         {% endfor %}
     </div>

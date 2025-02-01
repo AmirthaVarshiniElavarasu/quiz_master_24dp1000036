@@ -38,18 +38,20 @@ class Quiz(data.Model):
     __tablename__='quizzes'
     quiz_id=data.Column(data.Integer,primary_key=True)
     quiz_title=data.Column(data.String(200),nullable=False)
-    quiz_description=data.Column(data.String(200),nullable=False)
     chap_id=data.Column(data.Integer,data.ForeignKey('chap.chap_id'),nullable=False)
     quiz_date=data.Column(data.Date,nullable=False)
-    quiz_time=data.Column(data.Time,nullable=False)
+    quiz_time=data.Column(data.Integer,nullable=False)
     quiz_score=data.relationship('Scores',backref='Quiz',lazy=True)
+    quiz_ques=data.relationship('Questions',backref='Quiz',lazy=True)
 
     
 class Questions(data.Model):
     __tablename__="question"
     ques_id=data.Column(data.Integer,primary_key=True)
+    ques_title=data.Column(data.String(200),nullable=False)
     ques_statement=data.Column(data.Text,nullable=False)
     options=data.relationship('Option',backref='question',cascade='all,delete-orphan',lazy=True,foreign_keys='Option.op_ques_id')
+    quiz_id=data.Column(data.Integer,data.ForeignKey('quizzes.quiz_id'),nullable=False)
     correct_option=data.Column(data.Integer,data.ForeignKey('options.op_id'),nullable=False)
 
     def __repr__(self):

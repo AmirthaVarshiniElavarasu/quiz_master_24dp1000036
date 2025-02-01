@@ -47,7 +47,8 @@
 #index-page input[type="button"],
 #index-page button[type="button"],
 #index-page input[type="reset"],
-#index-page button[type="submit"]{
+#index-page button[type="submit"],
+#index-page button[type="button"]{
     width: auto;
     padding: 10px 20px;
     background-color: #007BFF;
@@ -63,7 +64,8 @@
 #index-page input[type="button"]:hover,
 #index-page button[type="button"]:hover,
 #index-page input[type="reset"]:hover,
-#index-page button[type="submit"]:hover
+#index-page button[type="submit"]:hover,
+#index-page button[type="button"]:hover
 {
     background-color: #0056b3;
 }
@@ -100,7 +102,8 @@
 
     #index-page input[type="submit"],
     #index-page input[type="button"],
-    #index-page button[type="submit"]
+    #index-page button[type="submit"],
+    #index-page button[type="button"]
     {
         font-size: 0.9em;
         padding: 8px 15px;
@@ -110,7 +113,8 @@
     #index-page input[type="email"],
     #index-page input[type="password"],
     #index-page input[type="date"],
-    #index-page button[type="submit"]
+    #index-page button[type="submit"],
+    #index-page button[type="button"]
     {
         font-size: 0.9em;
         padding: 8px;

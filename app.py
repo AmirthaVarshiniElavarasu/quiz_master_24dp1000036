@@ -2,7 +2,7 @@ from flask import Flask,render_template,url_for,redirect,request,session,flash
 from models import data,User,Subject,Chapter,Quiz,Questions,Option,Scores,Admin
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash,check_password_hash
-from datetime import datetime
+from datetime import datetime,timedelta
 from flask_bcrypt import Bcrypt
 
 
@@ -148,9 +148,15 @@ def admindb():
 
     return render_template('Admin_Dashboard.html',Subjects=Subjects,Chapters=Chapters)
 
-@application.route('/admindb/quiz_dashboard')
+@application.route('/admindb/quiz_dashboard/')
 def quiz_dashboard():
-    return render_template('quiz_dashboard.html')
+    if 'admin' not in session:
+        flash('please login')
+        return redirect(url_for('Admin_Login'))
+    
+    Quizzes=Quiz.query.all()
+
+    return render_template('quiz_dashboard.html',quizzes=Quizzes)
     
 @application.route('/admindb/summary_dashboard')
 def summary_dashboard():
@@ -282,12 +288,17 @@ def delete_chapter(chap_id,sub_id):
     flash(f"{chapter.chap_title} deleted")
     return redirect(url_for('admindb'))
 
-@application.route('/admindb/quiz_dashboard/create_quiz>',methods=['GET','POST'])
+@application.route('/admindb/quiz_dashboard/create_quiz',methods=['GET','POST'])
 def create_quiz():
     if 'admin' not in session:
         flash('Please Login to create a subject')
         return redirect(url_for('Admin_Login'))
-    # chapter = Chapter.query.get_or_404(chap_id) 
+    
+    if Chapter.query.first() == None:
+        flash("Please Create Chapter")
+        return redirect(url_for('admindb'))
+    
+    chapters=Chapter.query.all()
 
     latest_quiz=Quiz.query.order_by(Quiz.quiz_id.desc()).first()
     
@@ -296,17 +307,66 @@ def create_quiz():
         quiz_title= f"Quiz {next_quiz_number}"
     else:
         quiz_title="Quiz 1"
-
-    chapters=Chapter.query.all()
-    quiz=Quiz.query.first()
-
     
+    if request.method=='POST':
+        quiz_chap_id=request.form.get('quiz_chap_id')
+        date=request.form.get('quiz_date')
+        quiz_date=datetime.strptime(date,'%Y-%m-%d').date()
+        
+        hours=int(request.form.get('quiz_duration_hours'))
+        minutes=int(request.form.get('quiz_duration_minute'))
 
-    # if request.method == 'POST':
+        quiz_duration=(hours*60)+minutes
+        
+        new_quiz=Quiz(quiz_title=quiz_title,chap_id=quiz_chap_id,quiz_date=quiz_date,quiz_time=quiz_duration)
+        data.session.add(new_quiz)
+        data.session.commit()
 
-
+        flash(f"{quiz_title} Created Successfully")
+        return redirect(url_for('quiz_dashboard'))
+    
     return render_template('quiz_creation.html',chapters=chapters,action='Creation',quiz_title=quiz_title)
 
+@application.route('/admindb/quiz_dashboard/edit_quiz/<int:quiz_id>',methods=['GET','POST'])
+def edit_quiz(quiz_id):
+    if 'admin' not in session:
+        flash('Please Login to create a chapter')
+        return redirect("url_for('Admin_Login')")
+
+    quiz=Quiz.query.get_or_404(quiz_id)
+    chapters=Chapter.query.all()
+
+    if request.method=='POST':
+        quiz.chap_id=request.form.get('quiz_chap_id')
+        
+        date=request.form.get('quiz_date')
+        quiz.quiz_date=datetime.strptime(date,'%Y-%m-%d').date()
+        
+        hours=int(request.form.get('quiz_duration_hours'))
+        minutes=int(request.form.get('quiz_duration_minute'))
+
+        quiz.quiz_time=(hours*60)+minutes
+        
+        data.session.commit()
+        flash(f"{ quiz.quiz_title } Edited Successfully")
+        return redirect(url_for('quiz_dashboard'))
+    return render_template('quiz_creation.html',action="Edit",chapters=chapters,quiz_title=quiz.quiz_title,quiz=quiz)
+
+@application.route('/admindb/quiz_dashboard/delete_quiz/<int:quiz_id>',methods=['GET','POST'])
+def delete_quiz(quiz_id):
+    if 'admin' not in session:
+        flash('Please Login to create a subject')
+        return redirect("url_for('Admin_Login')")
+    
+    quiz=Quiz.query.get_or_404(quiz_id)
+    if quiz.quiz_ques:
+
+        flash("please delete the Questions")
+        return redirect("url_for('admindb')")
+    data.session.delete(quiz)
+    data.session.commit()
+    flash(f"{quiz.quiz_title} deleted")
+    return redirect(url_for('quiz_dashboard'))
 
 with application.app_context():
     setup_database()
