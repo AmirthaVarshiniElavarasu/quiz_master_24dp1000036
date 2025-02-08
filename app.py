@@ -371,6 +371,9 @@ def delete_quiz(quiz_id):
 @application.route('/admindb/quiz_dashboard/create_question', methods=['GET','POST'])
 def create_question():
     chapters=Chapter.query.all()
+    
+    
+
     return render_template('question.html',action='Create',chapters=chapters)
 
 with application.app_context():
