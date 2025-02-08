@@ -196,7 +196,7 @@ def create_subject():
         flash("Something went wrong")
         return render_template('subject.html', action="Creation")
 
-    return render_template('subject.html', action="Creation")
+    return render_template('subject.html', action="Create")
 
 
 @application.route('/admindb/edit_subject/<int:sub_id>',methods=['GET','POST'])
@@ -253,7 +253,7 @@ def create_chapter(sub_id):
         flash(f"{chap_title} Created Successfully")
         return redirect(url_for('admindb'))
 
-    return render_template('chapter.html', action="Creation")
+    return render_template('chapter.html', action="Create")
 
 
 @application.route('/admindb/edit_chapter/<int:chap_id>,<int:sub_id>',methods=['GET','POST'])
@@ -325,7 +325,7 @@ def create_quiz():
         flash(f"{quiz_title} Created Successfully")
         return redirect(url_for('quiz_dashboard'))
     
-    return render_template('quiz_creation.html',chapters=chapters,action='Creation',quiz_title=quiz_title)
+    return render_template('quiz_creation.html',chapters=chapters,action='Create',quiz_title=quiz_title)
 
 @application.route('/admindb/quiz_dashboard/edit_quiz/<int:quiz_id>',methods=['GET','POST'])
 def edit_quiz(quiz_id):
@@ -367,6 +367,11 @@ def delete_quiz(quiz_id):
     data.session.commit()
     flash(f"{quiz.quiz_title} deleted")
     return redirect(url_for('quiz_dashboard'))
+
+@application.route('/admindb/quiz_dashboard/create_question', methods=['GET','POST'])
+def create_question():
+    chapters=Chapter.query.all()
+    return render_template('question.html',action='Create',chapters=chapters)
 
 with application.app_context():
     setup_database()

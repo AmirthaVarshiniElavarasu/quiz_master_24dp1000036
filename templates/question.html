@@ -1,0 +1,49 @@
+{% extends 'index.html' %}
+{% block title %} Question {{ action }} {% endblock %}
+
+{% block navbar %}
+{% include "admin-navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<center>
+    <h2> {{ action }} Question </h2>
+    <form action="POST">
+        <div>
+            <table>
+                <tr>
+                    <td><label for="quiz_chap_name">Chapter Name:</label></td>
+                    <td><select name="quiz_chap_name" id="quiz_chap_name">
+                            {% for chapter in chapters %}
+
+                            <option value="{{ chapter.chap_id }}" {% if quiz and quiz.chap_id==chapter.chap_id
+                                %}selected{% endif %} data-id="{{ chapter.chap_id }}">
+                                {{ chapter.chap_title }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+
+                    <td><label for="quiz_chap_id">Chapter ID:</label></td>
+                    <td><input type="text" name="quiz_chap_id" id="quiz_chap_id"
+                            value="{{ quiz.chap_id if quiz else chapters[0].chap_id  }}" readonly>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="ques_title">Question Title:</label></td>
+                    <td><input type="text" name="ques_title" id="ques_title" value="{{ question.ques_title if question else '' }}"></td>
+                </tr>
+                <tr>
+                    <td><label for="ques_statement">Question Statement:</label></td>
+                    <td><textarea name="ques_statement" id="ques_statement"></textarea></td>
+                </tr>
+            </table>
+            <table>
+            <thead>Single Option Correct</thead>
+        </table>
+        </div>
+    </form>
+</center>
+{% endblock %}
