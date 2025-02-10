@@ -19,7 +19,7 @@
             </tr>
 
             <tr>
-                <td>Quiz Id</td>
+                <td>Question Id</td>
                 <td>Question Title</td>
                 <td>Action</td>
             </tr>
@@ -27,15 +27,18 @@
             {% for question in Question %}
             {% if question.quiz_id == quiz.quiz_id %}
             <tr>
-                <td>{{ question.quiz_id }}</td>
-                <td>{{ question.quiz_title }}</td>
+                <td>{{ question.ques_id }}</td>
+                <td>{{ question.ques_title }}</td>
+                <td><a href="{{ url_for('edit_question',quiz_id=quiz.quiz_id,question_id=question.ques_id) }}"><i class="fa fa-edit"></i></a>
+                    <a href="{{ url_for('delete_question',question_id=question.ques_id) }}"><i class="fa fa-trash"></i></a>
+                </td>
                 
             </tr>
             {% endif %}
             {% endfor %}
             <tr>
                 <td></td>
-                <td><a href="{{ url_for('create_question') }}"><input type="button"
+                <td><a href="{{ url_for('create_question',quiz_id=quiz.quiz_id) }}"><input type="button"
                             value="Add Question"></a></td>
             </tr>
            

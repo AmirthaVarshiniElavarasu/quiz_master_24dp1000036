@@ -6,6 +6,7 @@ from datetime import datetime,timedelta
 from flask_bcrypt import Bcrypt
 
 
+
 application=Flask(__name__)
 application.secret_key = "your_secret_key" 
 bcrypt = Bcrypt(application)
@@ -155,8 +156,9 @@ def quiz_dashboard():
         return redirect(url_for('Admin_Login'))
     
     Quizzes=Quiz.query.all()
+    Question=Questions.query.all()
 
-    return render_template('quiz_dashboard.html',quizzes=Quizzes)
+    return render_template('quiz_dashboard.html',quizzes=Quizzes,Question=Question)
     
 @application.route('/admindb/summary_dashboard')
 def summary_dashboard():
@@ -300,6 +302,7 @@ def create_quiz():
     
     chapters=Chapter.query.all()
 
+
     latest_quiz=Quiz.query.order_by(Quiz.quiz_id.desc()).first()
     
     if latest_quiz:
@@ -368,13 +371,73 @@ def delete_quiz(quiz_id):
     flash(f"{quiz.quiz_title} deleted")
     return redirect(url_for('quiz_dashboard'))
 
-@application.route('/admindb/quiz_dashboard/create_question', methods=['GET','POST'])
-def create_question():
-    chapters=Chapter.query.all()
+@application.route('/admindb/quiz_dashboard/create_question/<int:quiz_id>', methods=['GET','POST'])
+def create_question(quiz_id):
+    quiz=Quiz.query.get_or_404(quiz_id)
+    if 'admin' not in session:
+        flash('Please Login to create a subject')
+        return redirect(url_for('Admin_Login'))
     
-    
+    if request.method=="POST":
+        ques_title=request.form.get("ques_title")
+        ques_statement=request.form.get("ques_statement")
+        correct_option=request.form.get("correctoption")
+        
+        question=Questions(ques_title=ques_title,ques_statement=ques_statement,correct_option=correct_option,quiz_id=quiz_id)
+        data.session.add(question)
+        data.session.commit()
+       
+        optionsList = request.form.getlist("options[]")
+        for option in optionsList:
+            
+            new_option=Option(op_statement=option,op_ques_id=question.ques_id)
+            data.session.add(new_option)
 
-    return render_template('question.html',action='Create',chapters=chapters)
+        data.session.commit()
+        flash(f"{ ques_title } Created Successfully")
+
+
+    return render_template('question.html',action='Create',quiz=quiz)
+
+@application.route('/admindb/quiz_dashboard/edit_question/<int:quiz_id>,<int:question_id>',methods=['GET','POST'])
+def edit_question(quiz_id,question_id):
+    if 'admin' not in session:
+        flash('Please Login to create a chapter')
+        return redirect("url_for('Admin_Login')")
+    
+    quiz=Quiz.query.get_or_404(quiz_id)
+    question=Questions.query.get_or_404(question_id)
+    
+    if request.method=='POST':
+        question.ques_title=request.form.get('ques_title')
+        question.ques_statement=request.form.get("ques_statement")
+        question.correct_option=request.form.get("correctoption")
+        
+        data.session.commit()
+
+        optionsList = request.form.getlist("option[]")
+        existing_options = question.options.all()  # `.all()` because lazy='dynamic'
+        
+
+        data.session.commit()       
+                
+
+        flash(f"{ quiz.quiz_title } Edited Successfully")
+        return redirect(url_for('quiz_dashboard'))
+    return render_template('Edit_question.html',action="Edit",quiz=quiz,question=question)
+
+@application.route('/admindb/quiz_dashboard/delete_question/<int:question_id>',methods=['GET','POST'])
+def delete_question(question_id):
+    if 'admin' not in session:
+        flash('Please Login to create a subject')
+        return redirect("url_for('Admin_Login')")
+    
+    question=Questions.query.get_or_404(question_id)
+    
+    data.session.delete(question)
+    data.session.commit()
+    flash(f"{question.ques_title} deleted")
+    return redirect(url_for('quiz_dashboard'))
 
 with application.app_context():
     setup_database()

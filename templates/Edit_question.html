@@ -14,51 +14,56 @@
                 <tr>
                     <td><label for="quiz_title">Quiz Title:</label></td>
                     <td>
-                        <input type="text" name="quiz_title" id="quiz_title"
-                            value="{{ quiz.quiz_title  }}" readonly>
+                        <input type="text" name="quiz_title" id="quiz_title" value="{{ quiz.quiz_title  }}" readonly>
                     </td>
-                        
-                           
-                                
-                            
-                        
+
+
+
+
+
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td><label for="ques_title">Question Title:</label></td>
                     <td>
-                        <input type="text" name="ques_title" id="ques_title" required>
-                            
+                        <input type="text" name="ques_title" id="ques_title" value="{{ question.ques_title  }}"
+                            required>
+
                     </td>
                 </tr>
                 <tr>
                     <td><label for="ques_statement">Question Statement:</label></td>
                     <td>
-                        <textarea name="ques_statement" id="ques_statement" required> </textarea>
+                        <textarea name="ques_statement" id="ques_statement"
+                            required>{{ question.ques_statement }}</textarea>
                     </td>
                 </tr>
             </table>
 
-            <table >
+            <table>
                 <thead>
                     <tr>
                         <th>Single Option Correct</th>
                     </tr>
                 </thead>
                 <tbody id="options-container">
-                    <tr>
-                        <td>
-                            <label for="1">Option 1</label>
-                            <input type="text" id="1" name="options[]"  required>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <label for="2">Option 2</label>
-                            <input type="text" id="2" name="options[]" required>
-                        </td>
-                    </tr>
+                   
+                    
+
+                    {% for option in question.options %}
+                        <tr>
+                            <td>
+                                <input type="text" name="options[]" value="{{ option.op_statement }}" required>
+                            </td>
+                            {% if loop.index > 2 %}
+                            <td>
+                                <button type="button" onclick="del(event)">Delete</button>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        
+                        {% endfor %}
                     <tr id="last-row">
                         <td>
                             <button type="button" onclick="add_option()">Add Option</button>
@@ -69,10 +74,11 @@
                         <td>
                             <label for="correctoption">Correct Option</label>
                             <input type="text" id="correctoption" name="correctoption"
-                                placeholder="Please type the correct answer" required>
+                                placeholder="Please type the correct answer" value="{{ question.correct_option }}"
+                                required>
                         </td>
                     </tr>
-                
+
 
 
                 </tbody>
@@ -100,7 +106,7 @@
             newInput.setAttribute("name", "options[]");
             newInput.setAttribute("id", optionnum);
             newInput.required = true;
-            
+
 
 
             label.textContent = "Option " + optionnum;

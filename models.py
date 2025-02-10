@@ -49,10 +49,10 @@ class Questions(data.Model):
     __tablename__="question"
     ques_id=data.Column(data.Integer,primary_key=True)
     ques_title=data.Column(data.String(200),nullable=False)
-    ques_statement=data.Column(data.Text,nullable=False)
-    options=data.relationship('Option',backref='question',cascade='all,delete-orphan',lazy=True,foreign_keys='Option.op_ques_id')
+    ques_statement=data.Column(data.Text,nullable=False,unique=True)
+    options=data.relationship('Option',backref='question',cascade='all,delete-orphan',lazy='dynamic',foreign_keys='Option.op_ques_id')
     quiz_id=data.Column(data.Integer,data.ForeignKey('quizzes.quiz_id'),nullable=False)
-    correct_option=data.Column(data.Integer,data.ForeignKey('options.op_id'),nullable=False)
+    correct_option=data.Column(data.Integer,data.ForeignKey('options.op_id'),nullable=True)
 
     def __repr__(self):
         return f"<Question: {self.ques_statement}>"
