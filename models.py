@@ -43,7 +43,10 @@ class Quiz(data.Model):
     quiz_time=data.Column(data.Integer,nullable=False)
     quiz_score=data.relationship('Scores',backref='Quiz',lazy=True)
     quiz_ques=data.relationship('Questions',backref='Quiz',lazy=True)
-
+    
+    @property
+    def question(self):
+        return len(self.quiz_ques)
     
 class Questions(data.Model):
     __tablename__="question"

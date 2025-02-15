@@ -1,0 +1,35 @@
+{% extends 'index.html' %}
+{% block title %} Question {{ action }} {% endblock %}
+
+{% block navbar %}
+{% include "admin-navbar.html" %}
+{% endblock %}
+
+{% block content %}
+<center>
+    <div>
+        
+    </div>
+
+    <div id="admin_users">
+        <table>
+            <tr>
+                <td> User Id </td>
+                <td> User Name </td>
+                <td> Average Score </td>
+            </tr>
+        {% for user in users %}
+        <tr>
+            <td> {{ user.id }}</td>
+            <td> {{ user.username }}</td>
+            <td> {{ user.scores }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </div>
+
+
+    
+    
+</center>
+{% endblock %}

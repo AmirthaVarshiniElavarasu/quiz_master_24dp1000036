@@ -8,20 +8,31 @@
 
         <h1>Welcome to Quiz Master</h1>
         <h3>Log in Page</h3>
-        <form method="POST" action="{{ url_for('Login') }}">
+        <form method="POST">
             <table>
                 <tr>
                     <td><label for="email">Username:</label></td>
-                    <td><input type="email" placeholder="Email-ID" id="email"name="email" required></td>
+                    <td><input type="email" placeholder="Email-ID" id="email" name="email" required></td>
                 </tr>
                 <tr>
                     <td><label for="password">Password:</label></td>
-                    <td><input type="password" placeholder="Enter your password" id="password" name="password" required></td>
+                    <td><input type="password" placeholder="Enter your password" id="password" name="password" required>
+                    </td>
                 </tr>
                 <tr>
                     <td><input type="submit" value="Log in"></td>
                     <td><a href="{{ url_for('registration') }}"><input type="button" value="Registration"></a></td>
                     <td><a href="{{ url_for('Admin_Login') }}"><input type="button" value="Admin Login"></a></td>
+                </tr>
+                <tr>
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p>{{ message }}</p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+
                 </tr>
             </table>
         </form>

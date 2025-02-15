@@ -76,19 +76,15 @@ def Login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-        
-        
 
         user = User.query.filter_by(email=email).first()
-        
+       
         if not user:
             
             flash('User not found.')
             return render_template('loginpage.html')
 
-      
-        
-        if check_password_hash(user.password, password):
+        if bcrypt.check_password_hash(user.password, password):
             session['user'] = user.id
             session['name'] = user.username
             flash('Login successful.')
@@ -96,6 +92,7 @@ def Login():
         else:
             print("Password mismatch")
             flash('Invalid email or password.')
+            
     return render_template('loginpage.html')
 
 @application.route('/Logout')
@@ -121,7 +118,6 @@ def Admin_Login():
             flash('User not found.')
             return render_template('admin_login_page.html')
 
-      
         
         if bcrypt.check_password_hash(user_admin.admin_password, admin_password):
             session['admin'] = user_admin.admin_id
@@ -147,7 +143,7 @@ def admindb():
     Subjects=Subject.query.all()
     Chapters=Chapter.query.all()
 
-    return render_template('Admin_Dashboard.html',Subjects=Subjects,Chapters=Chapters)
+    return render_template('Admin_Dashboard.html',Subjects=Subjects,Chapters=Chapters,user="Admin")
 
 @application.route('/admindb/quiz_dashboard/')
 def quiz_dashboard():
@@ -158,15 +154,42 @@ def quiz_dashboard():
     Quizzes=Quiz.query.all()
     Question=Questions.query.all()
 
-    return render_template('quiz_dashboard.html',quizzes=Quizzes,Question=Question)
-    
+    return render_template('quiz_dashboard.html',quizzes=Quizzes,Question=Question,user="Admin")
+
+
+   
 @application.route('/admindb/summary_dashboard')
 def summary_dashboard():
-    return render_template('summary.html')
+    if 'admin' not in session:
+        flash('Please Login to create a subject')
+        return redirect("url_for('Admin_Login')")
+    users=User.query.all()
+    
+    subject=Subject.query.all()
+
+    return render_template('summary.html',user="Admin",users=users)
 
 @application.route('/userdb',methods=['GET','POST'])
 def userdb():
-    return render_template('User_Dashboard.html',user=session['name'])
+    if 'name' not in session:
+        flash('please login')
+        return redirect(url_for('Login'))
+    
+    quiz=Quiz.query.all()
+
+    return render_template('User_Dashboard.html',quiz=quiz)
+
+@application.route('/scores',methods=['GET','POST'])
+def scores():
+    return render_template('User_Dashboard.html')
+
+@application.route('/user_summary',methods=['GET','POST'])
+def user_summary():
+    return render_template('User_Dashboard.html')
+
+@application.route('/user_summary',methods=['GET','POST'])
+def user_summary():
+    return render_template('User_Dashboard.html')
 
 
 @application.route('/admindb/create_subject', methods=['GET', 'POST'])
@@ -415,9 +438,24 @@ def edit_question(quiz_id,question_id):
         
         data.session.commit()
 
-        optionsList = request.form.getlist("option[]")
-        existing_options = question.options.all()  # `.all()` because lazy='dynamic'
-        
+        optionsList = request.form.getlist("options[]")
+        existing_options = question.options.all() 
+        print(optionsList)
+        print(existing_options)
+        new_texts = set(optionsList)
+        for opt in existing_options:
+            if opt.op_statement not in new_texts: 
+                data.session.delete(opt)
+
+        existing_map = {opt.op_statement: opt for opt in existing_options}  
+        for text in optionsList:
+            if text in existing_map: 
+                existing_map[text].op_statement = text
+            else:
+                
+                new_option = Option(op_statement=text, op_ques_id=question.ques_id)
+                data.session.add(new_option)
+
 
         data.session.commit()       
                 
@@ -438,6 +476,9 @@ def delete_question(question_id):
     data.session.commit()
     flash(f"{question.ques_title} deleted")
     return redirect(url_for('quiz_dashboard'))
+
+
+
 
 with application.app_context():
     setup_database()

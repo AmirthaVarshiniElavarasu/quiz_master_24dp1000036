@@ -1,6 +1,43 @@
 {% extends 'index.html' %}
-{% block title %} User Dashboard {% endblock %}
+{% block title %}Dashboard {% endblock %}
 
 {% block navbar %}
-{% include 'admin-navbar.html' %}
+{% include 'user-navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<center>
+   
+        <div id="userdashboard">
+
+            <table>
+                <h1>Upcoming Quizzes</h1>
+                <tr>
+                    <td>ID</td>
+                    <td>Quiz Title</td>
+                    <td>No. of Questions</td>
+                    <td>Date</td>
+                    <td>Duration</td>
+                    <td>Action</td>
+
+                </tr>
+                {% for q in quiz %}
+                <tr>
+                    <td>{{ q.quiz_id }}</td>
+                    <td>{{ q.quiz_title }}</td>
+                    <td>{{ q.question }}</td>
+                    <td>{{q.quiz_date}}</td>
+                    <td>{{q.quiz_time}} Minutes</td>
+                    <td><button id="viewquiz">View</button>
+                    <td><button id="startquiz">Start</button>
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </table>
+
+        </div>
+   
+</center>
 {% endblock %}
