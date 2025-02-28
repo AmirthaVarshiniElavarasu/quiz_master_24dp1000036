@@ -1,0 +1,65 @@
+{% extends 'index.html' %}
+{% block title %} Start Quiz {% endblock %}
+
+{% block navbar %}
+{% include 'user-navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<center id="user_start_quiz">
+
+    <h2>{{ quiz.quiz_title }}</h2>
+    <p id="time">{{ quiz.quiz_time if questions else "" }}{{ ":00" if questions else "" }}</p>
+
+    <table>
+        <div id="quiz-container">
+            <tr>
+                <td><strong>Question No:</strong> <span id="question_number">1</span></td>
+            </tr>
+            <tr>
+                <td id="question_statement"></td>
+            </tr>
+            <tr>
+                <td>
+
+                    <div id="options_container"></div>
+                </td>
+            </tr>
+
+            <tr>
+                <td><button onclick="prevQuestion()">Previous Question</button></td>
+                <td><button onclick="nextQuestion()">Save and Next</button></td>
+                <td>
+                    <p><strong>Selected Answer:</strong> <span id="selected-option"></span></p>
+                </td>
+            </tr>
+
+            <tr>
+                <td><button type="submit" id="Submit">Submit</button></td>
+                <td><a href="{{url_for('userdb')}}"><button>Cancel</button></a></td>
+            </tr>
+        </div>
+    </table>
+
+    <div id="question_data" style="display: none;">
+        {% for q in questions %}
+        <div class="question-data" data-id="{{q.ques_id}}" data-question="{{q.ques_statement}}"
+            data-options="{{ q.options | map(attribute='op_statement')|join(',') }}">
+        </div>
+        {% endfor %}
+
+    </div>
+
+
+
+
+    <div class="popup-overlay"></div>
+    <div class="popup-box">
+        <h3>Are you sure want to submit this quiz? </h3>
+        <button type="submit" id="quiz_submit" onclick='submitQuiz("{{ quiz.quiz_id }}")'>Submit</button>
+        <button type="submit" id="Cancel">Cancel</button>
+    </div>
+
+
+</center>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'index.html' %}
+{% block title %} Start Quiz {% endblock %}
+
+{% block navbar %}
+{% include 'user-navbar.html' %}
+{% endblock %}
+
+{% block content %}
+<center>
+    <h2> Quiz Scores</h2>
+    <table>
+        <div>
+            <tr>
+            <td>ID</td>
+            <td>No.of Questions</td>
+            <td>Date</td>
+            <td>Score</td>
+            </tr>
+            {% for  score in  scores %}
+            <tr>
+            <td>{{ score.score_id }}</td>
+            <td>{{score.No_of_question}}</td>
+            <td>{{score.score_time_stamp}}</td>
+            <td>{{score.score_total}}</td>
+            </tr>
+            {% endfor %}
+        </div>
+    </table>
+</center>
+{% endblock %}

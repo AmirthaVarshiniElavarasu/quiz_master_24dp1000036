@@ -9,8 +9,32 @@
 <center>
 <table>
     <tr>
-        <td>ID</td>
-        <td><input type="text" name="quiz_id" value="{{quiz.quiz_id}}" readonly></td>
+        <td>ID :</td>
+        <td><input type="text" name="quiz_id" value="{{ quiz.quiz_id }}" readonly></td>
+    </tr>
+    <tr>
+        <td>Subject :</td>
+        <td><input type="text" name="quiz_id" value="{{ subject }}" readonly></td>
+    </tr>
+    <tr>
+        <td>Chapter :</td>
+        <td><input type="text" name="quiz_id" value="{{ chapter }}" readonly></td>
+    </tr> 
+    <tr>
+        <td>Number of Question :</td>
+        <td><input type="text" name="quiz_id" value="{{ quiz.question }}" readonly></td>
+    </tr> 
+    <tr>
+        <td>Scheduled Date :</td>
+        <td><input type="text" name="quiz_id" value="{{ quiz.quiz_date }}" readonly></td>
+    </tr> 
+    <tr>
+        <td>Duration :</td>
+        <td><input type="text" name="quiz_id" value="{{ quiz.quiz_time }}" readonly></td>
+    </tr> 
+    <tr>
+        
+        <td><a href="{{url_for('userdb')}}"><button>Close</button></a></td>
     </tr>
 </table>
 </center>

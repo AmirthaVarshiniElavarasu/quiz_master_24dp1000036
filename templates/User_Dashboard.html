@@ -7,37 +7,39 @@
 
 {% block content %}
 <center>
-   
-        <div id="userdashboard">
 
-            <table>
-                <h1>Upcoming Quizzes</h1>
-                <tr>
-                    <td>ID</td>
-                    <td>Quiz Title</td>
-                    <td>No. of Questions</td>
-                    <td>Date</td>
-                    <td>Duration</td>
-                    <td>Action</td>
+    <div id="userdashboard">
 
-                </tr>
-                {% for q in quiz %}
-                <tr>
-                    <td>{{ q.quiz_id }}</td>
-                    <td>{{ q.quiz_title }}</td>
-                    <td>{{ q.question }}</td>
-                    <td>{{q.quiz_date}}</td>
-                    <td>{{q.quiz_time}} Minutes</td>
-                    <td><button id="viewquiz">View</button>
-                    <td><button id="startquiz">Start</button>
-                    </td>
-                </tr>
+        <table>
+            <h1>Upcoming Quizzes</h1>
+            <tr>
+                <td>ID</td>
+                <td>Quiz Title</td>
+                <td>No. of Questions</td>
+                <td>Date</td>
+                <td>Duration</td>
+                <td>Action</td>
 
-                {% endfor %}
+            </tr>
+            {% for q in quiz %}
+            <tr>
+                <td>{{ q.quiz_id }}</td>
+                <td>{{ q.quiz_title }}</td>
+                <td>{{ q.question }}</td>
+                <td>{{q.quiz_date}}</td>
+                <td>{{q.quiz_time}} Minutes</td>
+                <td><a href="{{ url_for('user_view_quiz',quiz_id=q.quiz_id)}}"><button id="viewquiz">View</button></a>
+                <td>
+                    <a href="{{ url_for('user_start_quiz', quiz_id=q.quiz_id) }}"><button id="startquiz">Start</button></a>
+                </td>
+                </td>
+            </tr>
 
-            </table>
+            {% endfor %}
 
-        </div>
-   
+        </table>
+
+    </div>
+
 </center>
 {% endblock %}

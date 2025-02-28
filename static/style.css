@@ -33,7 +33,8 @@
 #index-page input[type="email"],
 #index-page input[type="password"],
 #index-page input[type="date"],
-#index-page button[type="submit"] {
+#index-page button[type="submit"],
+#index-page button {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -48,7 +49,8 @@
 #index-page button[type="button"],
 #index-page input[type="reset"],
 #index-page button[type="submit"],
-#index-page button[type="button"]{
+#index-page button[type="button"],
+#index-page button{
     width: auto;
     padding: 10px 20px;
     background-color: #007BFF;
@@ -65,7 +67,8 @@
 #index-page button[type="button"]:hover,
 #index-page input[type="reset"]:hover,
 #index-page button[type="submit"]:hover,
-#index-page button[type="button"]:hover
+#index-page button[type="button"]:hover,
+#index-page button:hover
 {
     background-color: #0056b3;
 }
@@ -103,7 +106,8 @@
     #index-page input[type="submit"],
     #index-page input[type="button"],
     #index-page button[type="submit"],
-    #index-page button[type="button"]
+    #index-page button[type="button"],
+    #index-page button
     {
         font-size: 0.9em;
         padding: 8px 15px;
@@ -114,9 +118,34 @@
     #index-page input[type="password"],
     #index-page input[type="date"],
     #index-page button[type="submit"],
-    #index-page button[type="button"]
+    #index-page button[type="button"],
+    #index-page button
     {
         font-size: 0.9em;
         padding: 8px;
     }
+}
+
+.popup-overlay{
+    display: none;
+    background-color: black;
+    opacity: 0.8;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.popup-box{
+    display: none;
+    background-color: white;
+    width: 40%;
+    padding: 40px;
+    border-radius: 10px;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+    z-index: 2;
 }

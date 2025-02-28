@@ -1,4 +1,4 @@
-from flask import Flask,render_template,url_for,redirect,request,session,flash
+from flask import Flask,render_template,url_for,redirect,request,session,flash,jsonify
 from models import data,User,Subject,Chapter,Quiz,Questions,Option,Scores,Admin
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash,check_password_hash
@@ -142,8 +142,10 @@ def admindb():
     
     Subjects=Subject.query.all()
     Chapters=Chapter.query.all()
+    Quizzes=Quiz.query.all()
 
-    return render_template('Admin_Dashboard.html',Subjects=Subjects,Chapters=Chapters,user="Admin")
+
+    return render_template('Admin_Dashboard.html',Subjects=Subjects,Chapters=Chapters,quiz=Quizzes,user="Admin")
 
 @application.route('/admindb/quiz_dashboard/')
 def quiz_dashboard():
@@ -178,18 +180,119 @@ def userdb():
     quiz=Quiz.query.all()
 
     return render_template('User_Dashboard.html',quiz=quiz)
+@application.route('/search',methods=['GET'])
+def search():
+    s=request.args.get("q","").strip()
+    source= request.headers.get("Referer","")
+    
+    if not s:
+        return jsonify({"error":"Empty search query"}),400
+    
+    if "admin-navbar.html" in source:
+        User_results=User.query.filter(
+            User.id.like(f"%{s}%")| User.username.ilike(f"%{s}%")| 
+            User.gender.ilike(f"%{s}%")|User.email.ilike(f"%{s}%")).all()
+        
+        quiz_results = Quiz.query.filter(
+            Quiz.quiz_id.like(f"%{s}%")|Quiz.quiz_title.ilike(f"%{s}%")).all()
+        
+        subject_result=Subject.query.filter(
+            Subject.sub_id.like(f"%{s}%")| Subject.sub_name.ilike(f"%{s}%")).all()
+
+        chapter_result=Chapter.query.filter(
+            Chapter.chap_id.like(f"%{s}%")|Chapter.chap_title.ilike(f"%{s}%")).all()
+
+        results = {
+            "Users": [{"Id":u.id,"Username":u.username,"Email":u.email,"Qualification":u.qualification,"Gender":u.gender,"Date_of_Birth":u.dob}for u in User_results],
+            "Quizzes":[{"Quiz_Id":q.quiz_id,"Quiz_Title":q.quiz_title,"Quiz_Chapter_Id":q.chap_id,"Quiz_Start_Date":q.quiz_date,"Quiz_Duration":q.quiz_time} for q in quiz_results],
+            "Subjects":[{"Subject_Id":s.sub_id,"Subject_Name":s.sub_name}for s in subject_result],
+            "Chapters":[{"Chapter_Id":c.chap_id,"Chapter_Title":c.chap_title}for c in chapter_result]
+        }  
+    elif "user-navbar.html" in source:
+        quiz_results = Quiz.query.filter(
+            Quiz.quiz_id.like(f"%{s}%")|Quiz.quiz_title.ilike(f"%{s}%")).all()
+        
+        subject_result=Subject.query.filter(
+            Subject.sub_id.like(f"%{s}%")| Subject.sub_name.ilike(f"%{s}%")).all()
+
+        chapter_result=Chapter.query.filter(
+            Chapter.chap_id.like(f"%{s}%")|Chapter.chap_title.ilike(f"%{s}%")).all()
+        
+        
+
+        results = {
+            "Quizzes":[{"Quiz_Id":q.quiz_id,"Quiz_Title":q.quiz_title,"Quiz_Chapter_Id":q.chap_id,"Quiz_Start_Date":q.quiz_date,"Quiz_Duration":q.quiz_time} for q in quiz_results],
+            "Subjects":[{"Subject_Id":s.sub_id,"Subject_Name":s.sub_name}for s in subject_result],
+            "Chapters":[{"Chapter_Id":c.chap_id,"Chapter_Title":c.chap_title}for c in chapter_result]
+        }  
+
+    return jsonify(results)  
+
+
+
 
 @application.route('/scores',methods=['GET','POST'])
 def scores():
-    return render_template('User_Dashboard.html')
+    if 'name' not in session:
+        flash('please login')
+        return redirect(url_for('Login'))
+    
+    user_id=session['user']
+    scores=Scores.query.filter_by(user_score_id=user_id).all()
+    
+    return render_template('user_scores.html',scores=scores)
 
 @application.route('/user_summary',methods=['GET','POST'])
 def user_summary():
     return render_template('User_Dashboard.html')
 
-@application.route('/user_summary',methods=['GET','POST'])
-def user_summary():
-    return render_template('User_Dashboard.html')
+@application.route('/userdb/user_view_quiz/<int:quiz_id>',methods=['GET','POST'])
+def user_view_quiz(quiz_id):
+    if 'name' not in session:
+        flash('please login')
+        return redirect(url_for('Login'))
+    
+    quiz=Quiz.query.get_or_404(quiz_id)
+    chapter=Chapter.query.filter_by(chap_id=quiz.chap_id).first()
+    subject=Subject.query.filter_by(sub_id=chapter.sub_id).first()
+
+    return render_template('user_view_quiz.html',quiz=quiz,chapter=chapter.chap_title,subject=subject.sub_name)
+
+@application.route('/userdb/user_start_quiz/<int:quiz_id>',methods=['GET','POST'])
+def user_start_quiz(quiz_id):
+    if 'name' not in session:
+        flash('please login')
+        return redirect(url_for('Login'))
+    
+    quiz=Quiz.query.get_or_404(quiz_id)
+    question=Questions.query.filter_by(quiz_id=quiz_id).all()
+    
+
+    correctAnswer={str(i.ques_id) : i.correct_option  for i in question }
+    total=0
+    
+    No_of_quest=len(quiz.quiz_ques)
+    
+    if request.method=="POST":
+        userAnswer=request.get_json()
+        time=datetime.now()
+       
+        for ques_id, correct_ans in correctAnswer.items():
+            if ques_id not in userAnswer:
+                userAnswer[ques_id] = "none"  # Add missing key with "none"
+            
+            if userAnswer[ques_id] == correct_ans:
+                total+=1
+        
+        
+        new_score=Scores(quiz_score_id=quiz_id,user_score_id=session['user'],score_time_stamp=time,score_total=total,No_of_question=No_of_quest)
+        data.session.add(new_score)
+        data.session.commit()
+
+        if not userAnswer:
+            return jsonify({"error": "No data received"}), 400 
+        return jsonify({"message":"Quiz submitted successfully","quiz_id":quiz_id,"data":userAnswer,"redirect_url":url_for('scores')}),200
+    return render_template('user_start_quiz.html',quiz=quiz,questions=question)
 
 
 @application.route('/admindb/create_subject', methods=['GET', 'POST'])

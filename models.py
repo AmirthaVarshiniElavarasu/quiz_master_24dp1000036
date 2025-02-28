@@ -14,7 +14,7 @@ class User(data.Model):
     gender=data.Column(data.String(6),nullable=False)
     dob=data.Column(Date,nullable=False)
     scores=data.relationship('Scores',backref='User',lazy=True)
-    
+
 
 class Subject(data.Model):
     __tablename__='sub'
@@ -43,6 +43,7 @@ class Quiz(data.Model):
     quiz_time=data.Column(data.Integer,nullable=False)
     quiz_score=data.relationship('Scores',backref='Quiz',lazy=True)
     quiz_ques=data.relationship('Questions',backref='Quiz',lazy=True)
+    
     
     @property
     def question(self):
@@ -78,9 +79,10 @@ class Scores(data.Model):
     user_score_id=data.Column(data.Integer,data.ForeignKey('user.id'),nullable=False)
     score_time_stamp=data.Column(data.DateTime,nullable=False)
     score_total=data.Column(data.Integer,nullable=False)
+    No_of_question=data.Column(data.Integer,nullable=False)
 
 class Admin(data.Model):
-    __tablename__="admin"
+    __tablename__="admin"   
     admin_id=data.Column(data.Integer,primary_key=True)
     admin_username=data.Column(data.String(50),nullable=False)
     admin_email=data.Column(data.String(150),nullable=False,unique=True)
