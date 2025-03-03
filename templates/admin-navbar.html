@@ -90,8 +90,8 @@
             <div id="logout" class="User-logout">
                 <a href="{{ url_for('Admin_Logout') }}">Logout</a>
             </div>
-            <div id="search" class="admin-search">
-                <input type="search" id="searchInput" onkeyup="search()" placeholder="Search here">
+            <div id="search" class="admin-search" data-source="admin-navbar.html">
+                <input type="search" id="admin-search" onkeyup="search()" placeholder="Search here">
             </div>
             <div id="results"></div>
             <div>Welcome {{ user }}</div>

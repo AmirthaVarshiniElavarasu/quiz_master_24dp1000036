@@ -23,11 +23,12 @@
                 <td>Question Title</td>
                 <td>Action</td>
             </tr>
-
+            {% set ns = namespace(question_no=0) %}
             {% for question in Question %}
             {% if question.quiz_id == quiz.quiz_id %}
+            {% set ns.question_no = ns.question_no + 1 %}
             <tr>
-                <td>{{ question.ques_id }}</td>
+                <td>{{ ns.question_no }}</td>
                 <td>{{ question.ques_title }}</td>
                 <td><a href="{{ url_for('edit_question',quiz_id=quiz.quiz_id,question_id=question.ques_id) }}"><i class="fa fa-edit"></i></a>
                     <a href="{{ url_for('delete_question',question_id=question.ques_id) }}"><i class="fa fa-trash"></i></a>

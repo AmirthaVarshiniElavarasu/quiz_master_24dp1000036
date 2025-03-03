@@ -90,9 +90,10 @@
             <div id="user_logout" class="user-logout-class">
                 <a href="{{ url_for('Logout') }}">Logout</a>
             </div>
-            <div id="user_search" class="user-search-class">
-                <input type="search" placeholder="Search here">
+            <div id="search" class="user-search-class" data-source="user-navbar.html">
+                <input type="search" id="user-search" onkeyup="search()" placeholder="Search here"></input>
             </div>
+            <div id="results"></div>
             <div>Welcome {{ session['name'] }}</div>
         </div>
     </nav>

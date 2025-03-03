@@ -26,17 +26,64 @@ document.addEventListener("DOMContentLoaded", function () {
     let popupbox = document.querySelector(".popup-box");
     let submit = document.getElementById("Submit");
     let cancel = document.getElementById("Cancel");
-    if(submit && cancel ){
-    submit.addEventListener("click", function () {
-        popupoverlay.style.display = "block";
-        popupbox.style.display = "block";
-    })
-    cancel.addEventListener("click", function (event) {
-        event.preventDefault();
-        popupoverlay.style.display = "none";
-        popupbox.style.display = "none";
+    if (submit && cancel) {
+        submit.addEventListener("click", function () {
+            popupoverlay.style.display = "block";
+            popupbox.style.display = "block";
+        })
+        cancel.addEventListener("click", function (event) {
+            event.preventDefault();
+            popupoverlay.style.display = "none";
+            popupbox.style.display = "none";
 
-    })}
+        })
+    }
+
+    let ChartData = document.getElementById("chartdata");
+
+    if (!chartData) {
+        console.error("chartData div not found!");
+        return;
+    }
+    console.log("Raw dataset values:", chartData.dataset);
+
+    let barXSubjects = JSON.parse(chartData.dataset.barXSubjects || "[]");
+    let barYScores = JSON.parse(chartData.dataset.barYScores || "[]");
+    let barColors = JSON.parse(chartData.dataset.barColors || "[]");
+
+    let pieXSubjects = JSON.parse(chartData.dataset.pieXSubjects || "[]");
+    let pieYScores = JSON.parse(chartData.dataset.pieYScores || "[]");
+    let pieColors = JSON.parse(chartData.dataset.pieColors || "[]");
+
+
+ 
+    new Chart("barChart", {
+        type: "bar",
+        data: {
+            labels: barXSubjects,
+            datasets: [{
+                backgroundColor: barColors,
+                data: barYScores
+            }]
+        },
+        options: { responsive: true }
+    });
+
+   
+    new Chart("pieChart", {
+        type: "pie",
+        data: {
+            labels: pieXSubjects,
+            datasets: [{
+                backgroundColor: pieColors,
+                data: pieYScores
+            }]
+        },
+        options: { responsive: true }
+    });
+
+
+
 
 });
 
@@ -164,10 +211,10 @@ function submitQuiz(quiz_id) {
         .then(data => {
             console.log("Response from API:", data);
             if (data.redirect_url) {
-              window.location.href = data.redirect_url;
+                window.location.href = data.redirect_url;
             }
         })
-        .catch (error => console.error("Error submitting quiz:", error));
+        .catch(error => console.error("Error submitting quiz:", error));
 }
 
 function Description(ID) {
@@ -180,52 +227,64 @@ function Description(ID) {
 
 }
 
-function search(){
-    let query = document.getElementById("searchInput").value.trim();
+function search() {
+    let query;
+    let pageSource = document.getElementById("search").getAttribute("data-source")
+    if (pageSource === "user-navbar.html") {
+        query = document.getElementById("user-search").value;
+    }
+    else if (pageSource === "admin-navbar.html") {
+        query = document.getElementById("admin-search").value;
 
-    if(query === ""){
-        document.getElementById('results').innerHTML="<p style='color:red;'>Please enter a search term.</p>"
+    }
+
+    if (query === "") {
+        document.getElementById("results").innerHTML = "<p style='color:red;'>Please enter a search term.</p>";
         return;
     }
 
-    fetch(`/search?q=${query}`)
+    fetch(`/search?q=${query}&source=${pageSource}`)
         .then(response => response.json())
         .then(data => {
-            let resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML='';
+            let resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = '';
 
-
-            if (data.Users.length>0){
-                resultsDiv.innerHTML+="<h3>Users</h3>";
+            if (data.Users && data.Users.length > 0) {
+                resultsDiv.innerHTML += "<h3>Users</h3>";
                 data.Users.forEach(user => {
-                    resultsDiv.innerHTML += `<p> Id:${user.Id} - Username:${user.Username} - Email:${user.Email} - Qualification:${user.Qualification} - Gender:${user.Gender} - Date of Birth:${user.Date_of_Birth}</p>`
+                    resultsDiv.innerHTML += `<p> Id: ${user.Id} - Username: ${user.Username} - Email: ${user.Email} - Qualification: ${user.Qualification} - Gender: ${user.Gender} - Date of Birth: ${user.Date_of_Birth}</p>`;
                 });
             }
 
-            if(data.Quizzes.length>0){
-                resultsDiv.innerHTML+="<h3>Quzzies</h3>";
-                data.Quizzes.forEach(quiz =>{
-                    resultsDiv.innerHTML+= `<p> Quiz Id:${quiz.Quiz_Id} - Quiz Title:${quiz.Quiz_Title} - Quiz Chapter Id:${quiz.Quiz_Chapter_Id} - Quiz Start Date: ${quiz.Quiz_Start_Date} - Quiz_Duration:${quiz.Quiz_Duration}</p>`
+            if (data.Quizzes && data.Quizzes.length > 0) {
+                resultsDiv.innerHTML += "<h3>Quizzes</h3>";
+                data.Quizzes.forEach(quiz => {
+                    resultsDiv.innerHTML += `<p> Quiz Id: ${quiz.Quiz_Id} - Quiz Title: ${quiz.Quiz_Title} - Quiz Chapter Id: ${quiz.Quiz_Chapter_Id} - Quiz Start Date: ${quiz.Quiz_Start_Date} - Quiz Duration: ${quiz.Quiz_Duration}</p>`;
                 });
             }
 
-            if(data.Subjects.length>0){
-                resultsDiv.innerHTML+="<h3>Subjects</h3>";
-                data.Subjects.forEach(subject =>{
-                    resultsDiv.innerHTML += `<p> Subject Id:${subject.Subject_Id} - Subject_Name:${subject.Subject_Name}</p>`
+            if (data.Subjects && data.Subjects.length > 0) {
+                resultsDiv.innerHTML += "<h3>Subjects</h3>";
+                data.Subjects.forEach(subject => {
+                    resultsDiv.innerHTML += `<p> Subject Id: ${subject.Subject_Id} - Subject Name: ${subject.Subject_Name}</p>`;
                 });
             }
-            
-            if(data.Chapters.length>0){
-                resultsDiv.innerHTML+="<h3>Chapters</h3>";
-                data.Chapters.forEach(chapter =>{
-                    resultsDiv.innerHTML +=`<p> Chapter Id:${chapter.Chapter_Id} - Chapter Title:${chapter.Chapter_Title} </p>`
-                });
 
+            if (data.Chapters && data.Chapters.length > 0) {
+                resultsDiv.innerHTML += "<h3>Chapters</h3>";
+                data.Chapters.forEach(chapter => {
+                    resultsDiv.innerHTML += `<p> Chapter Id: ${chapter.Chapter_Id} - Chapter Title: ${chapter.Chapter_Title}</p>`;
+                });
+            }
+            if (data.Scores && data.Scores.length > 0) {
+                resultsDiv.innerHTML += "<h3>Scores</h3>";
+                data.Scores.forEach(score => {
+                    resultsDiv.innerHTML += `<p> Scores Id: ${score.score_id} - Quiz_Id: ${score.quiz_score_id} -  Total Score: ${score.Total_Score}</p>`;
+                });
             }
         })
-        .catch(error =>{
-            console.error("Search error",error);
-            document.getElementById("results").innerHTML="<p style='color=red;'>Something went wrong. Try again.</p>"
+        .catch(error => {
+            console.error("Search error", error);
+            document.getElementById("results").innerHTML = "<p style='color:red;'>Something went wrong. Try again.</p>";
         });
 }

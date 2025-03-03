@@ -27,6 +27,16 @@
         {% endfor %}
     </table>
     </div>
+    <div id="chartData"
+     data-bar-x-subjects='{{ bar_X_subjects | tojson | safe }}'
+     data-bar-y-scores='{{ bar_y_scores | tojson | safe }}'
+     data-bar-colors='{{ bar_Colors | tojson | safe }}'
+     data-pie-x-subjects='{{ pie_X_subjects | tojson | safe }}'
+     data-pie-y-scores='{{ pie_y_scores | tojson | safe }}'
+     data-pie-colors='{{ pie_Colors | tojson | safe }}'>
+</div>
+    <canvas id="barChart"></canvas>
+    <canvas id="pieChart"></canvas>
 
 
     

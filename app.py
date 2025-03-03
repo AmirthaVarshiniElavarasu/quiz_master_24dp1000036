@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash,check_password_hash
 from datetime import datetime,timedelta
 from flask_bcrypt import Bcrypt
+import random
 
 
 
@@ -33,6 +34,35 @@ def setup_database():
         
         data.session.add(new_admin)
         data.session.commit()
+
+
+def generate_color():
+    return "#{:06x}".format(random.randint(0,0XFFFFFF))
+
+def get_user_attempts_by_subject():
+    user_attempts = (
+        data.session.query(
+            Subject.sub_name,
+            data.func.count(data.func.distinct(Scores.user_score_id)).label("user_attempts")  # Unique users per subject
+        )
+        .join(Chapter, Subject.sub_id == Chapter.sub_id)
+        .join(Quiz, Chapter.chap_id == Quiz.chap_id)
+        .join(Scores, Quiz.quiz_id == Scores.quiz_score_id)
+        .group_by(Subject.sub_name)
+        .all()
+    )
+    return user_attempts
+
+def get_total_scores_by_subject():
+    total_scores = (
+        data.session.query(Subject.sub_name,data.func.sum(Scores.score_total).label("total_score"))
+        .join(Chapter, Subject.sub_id == Chapter.sub_id)
+        .join(Quiz, Chapter.chap_id == Quiz.chap_id)
+        .join(Scores, Quiz.quiz_id == Scores.quiz_score_id)
+        .group_by(Subject.sub_name)
+        .all()
+    )
+    return total_scores
 
 
 
@@ -165,11 +195,27 @@ def summary_dashboard():
     if 'admin' not in session:
         flash('Please Login to create a subject')
         return redirect("url_for('Admin_Login')")
-    users=User.query.all()
     
-    subject=Subject.query.all()
+    users=User.query.all()
+    subject_scores=get_total_scores_by_subject()
+    subject_attempt=get_user_attempts_by_subject()
 
-    return render_template('summary.html',user="Admin",users=users)
+    bar_color=[generate_color() for _ in range(len(subject_scores))]
+    pie_color=[generate_color() for _ in range(len(subject_scores))]
+
+    bar_x_values,bar_y_values,pie_x_values,pie_y_values=[],[],[],[]
+
+    for subjects,scores in subject_scores:
+        bar_x_values.append(subjects)
+        bar_y_values.append(scores)
+
+    for subjects,user_att in subject_attempt:
+        pie_x_values.append(subjects)
+        pie_y_values.append(user_att)
+    
+
+    return render_template('summary.html',user="Admin",users=users,bar_X_subjects=bar_x_values, bar_y_scores=bar_y_values, bar_Colors=bar_color,
+        pie_X_subjects=pie_x_values, pie_y_scores=pie_y_values, pie_Colors=pie_color)
 
 @application.route('/userdb',methods=['GET','POST'])
 def userdb():
@@ -182,9 +228,20 @@ def userdb():
     return render_template('User_Dashboard.html',quiz=quiz)
 @application.route('/search',methods=['GET'])
 def search():
-    s=request.args.get("q","").strip()
-    source= request.headers.get("Referer","")
     
+    s=request.args.get("q","").strip()
+    source= request.args.get("source","").strip()
+    
+    User_results,quiz_results,subject_result,chapter_result,scores_result=[],[],[],[],[]
+    
+    if session.get('admin'):  
+        user_id = session['admin']
+    elif session.get('user'):  
+        user_id = session['user']
+    else:
+        return jsonify({"error": "Unauthorized"}), 401  
+        
+
     if not s:
         return jsonify({"error":"Empty search query"}),400
     
@@ -202,12 +259,7 @@ def search():
         chapter_result=Chapter.query.filter(
             Chapter.chap_id.like(f"%{s}%")|Chapter.chap_title.ilike(f"%{s}%")).all()
 
-        results = {
-            "Users": [{"Id":u.id,"Username":u.username,"Email":u.email,"Qualification":u.qualification,"Gender":u.gender,"Date_of_Birth":u.dob}for u in User_results],
-            "Quizzes":[{"Quiz_Id":q.quiz_id,"Quiz_Title":q.quiz_title,"Quiz_Chapter_Id":q.chap_id,"Quiz_Start_Date":q.quiz_date,"Quiz_Duration":q.quiz_time} for q in quiz_results],
-            "Subjects":[{"Subject_Id":s.sub_id,"Subject_Name":s.sub_name}for s in subject_result],
-            "Chapters":[{"Chapter_Id":c.chap_id,"Chapter_Title":c.chap_title}for c in chapter_result]
-        }  
+       
     elif "user-navbar.html" in source:
         quiz_results = Quiz.query.filter(
             Quiz.quiz_id.like(f"%{s}%")|Quiz.quiz_title.ilike(f"%{s}%")).all()
@@ -218,17 +270,19 @@ def search():
         chapter_result=Chapter.query.filter(
             Chapter.chap_id.like(f"%{s}%")|Chapter.chap_title.ilike(f"%{s}%")).all()
         
+        scores_result=Scores.query.filter(
+            Scores.score_id==user_id,Scores.quiz_score_id.like(f"%{s}%")|Scores.score_total.like(f"%{s}%"))
         
 
-        results = {
+    results = {
+            "Users": [{"Id":u.id,"Username":u.username,"Email":u.email,"Qualification":u.qualification,"Gender":u.gender,"Date_of_Birth":u.dob}for u in User_results],
             "Quizzes":[{"Quiz_Id":q.quiz_id,"Quiz_Title":q.quiz_title,"Quiz_Chapter_Id":q.chap_id,"Quiz_Start_Date":q.quiz_date,"Quiz_Duration":q.quiz_time} for q in quiz_results],
             "Subjects":[{"Subject_Id":s.sub_id,"Subject_Name":s.sub_name}for s in subject_result],
-            "Chapters":[{"Chapter_Id":c.chap_id,"Chapter_Title":c.chap_title}for c in chapter_result]
+            "Chapters":[{"Chapter_Id":c.chap_id,"Chapter_Title":c.chap_title}for c in chapter_result],
+            "Scores":[{"Quiz_Id":sc.quiz_score_id,"score_id":sc.score_id,"Total_Score":sc.score_total}for sc in scores_result]
         }  
 
     return jsonify(results)  
-
-
 
 
 @application.route('/scores',methods=['GET','POST'])
