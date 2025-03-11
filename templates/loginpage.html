@@ -11,6 +11,17 @@
         <form method="POST">
             <table>
                 <tr>
+                    {% if request_path.rstrip('/') == "/Login" %}
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    {% for message in messages %}
+                    <p>{{ message }}</p>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                    {% endif %}
+                </tr>
+                <tr>
                     <td><label for="email">Username:</label></td>
                     <td><input type="email" placeholder="Email-ID" id="email" name="email" required></td>
                 </tr>
@@ -23,16 +34,6 @@
                     <td><input type="submit" value="Log in"></td>
                     <td><a href="{{ url_for('registration') }}"><input type="button" value="Registration"></a></td>
                     <td><a href="{{ url_for('Admin_Login') }}"><input type="button" value="Admin Login"></a></td>
-                </tr>
-                <tr>
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    {% for message in messages %}
-                    <p>{{ message }}</p>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-
                 </tr>
             </table>
         </form>

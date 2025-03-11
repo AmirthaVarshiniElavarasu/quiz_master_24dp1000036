@@ -2,7 +2,7 @@ from flask import Flask,render_template,url_for,redirect,request,session,flash,j
 from models import data,User,Subject,Chapter,Quiz,Questions,Option,Scores,Admin
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash,check_password_hash
-from datetime import datetime,timedelta
+from datetime import datetime,timezone
 from flask_bcrypt import Bcrypt
 import random
 
@@ -64,6 +64,19 @@ def get_total_scores_by_subject():
     )
     return total_scores
 
+def get_no_of_subject_by_quiz(user_id):
+    Quiz_subjects=(
+        data.session.query(
+            Subject.sub_name,
+            data.func.count(data.func.distinct(Scores.quiz_score_id)).label("no_of_quiz")  # Unique quiz per subject
+        )
+        .join(Chapter, Subject.sub_id == Chapter.sub_id)
+        .join(Quiz, Chapter.chap_id == Quiz.chap_id)
+        .join(Scores, Quiz.quiz_id == Scores.quiz_score_id)
+        .filter(Scores.user_score_id ==user_id)
+        .group_by(Subject.sub_name)
+        .all())
+    return Quiz_subjects
 
 
 @application.route('/',methods=['GET','POST'])
@@ -88,7 +101,7 @@ def registration():
         hased_password=bcrypt.generate_password_hash(password).decode('utf-8')
 
         if User.query.filter_by(username=username).first():
-            return "Username already exists!"
+            return flash("Username already exists!")
         else:
             new_user=User(email=email,password=hased_password,username=username,qualification=qualification,gender=gender,dob=dob_1)
             data.session.add(new_user)
@@ -98,7 +111,7 @@ def registration():
             flash('Registration successful!')
             return redirect(url_for('Login'))
 
-    return render_template('registration.html')
+    return render_template('registration.html',request_path=request.path)
 
 
 @application.route('/Login', methods=['GET', 'POST'])
@@ -106,13 +119,14 @@ def Login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        print(request.path)
 
         user = User.query.filter_by(email=email).first()
        
         if not user:
             
             flash('User not found.')
-            return render_template('loginpage.html')
+            return render_template('loginpage.html',request_path=request.path)
 
         if bcrypt.check_password_hash(user.password, password):
             session['user'] = user.id
@@ -123,13 +137,13 @@ def Login():
             print("Password mismatch")
             flash('Invalid email or password.')
             
-    return render_template('loginpage.html')
+    return render_template('loginpage.html',request_path=request.path)
 
 @application.route('/Logout')
 def Logout():
     session.pop('user',None)
     flash('you have been logged out.')
-    return redirect(url_for('Login'))
+    return redirect(url_for('Login',request_path=request.path))
 
 
 
@@ -156,13 +170,13 @@ def Admin_Login():
         else:
             print("Password mismatch")
             flash('Invalid email or password.')
-    return render_template('admin_login_page.html')
+    return render_template('admin_login_page.html',request_path=request.path)
 
 @application.route('/Admin_Logout',methods=['GET'])
 def Admin_Logout():
     session.pop('admin',None)
     flash('you have been logged out.')
-    return redirect(url_for('Admin_Login'))
+    return redirect(url_for('Admin_Login',request_path=request.path))
 
 @application.route('/admindb',methods=['GET','POST'])
 def admindb():
@@ -175,7 +189,7 @@ def admindb():
     Quizzes=Quiz.query.all()
 
 
-    return render_template('Admin_Dashboard.html',Subjects=Subjects,Chapters=Chapters,quiz=Quizzes,user="Admin")
+    return render_template('Admin_Dashboard.html',Subjects=Subjects,Chapters=Chapters,quiz=Quizzes,user="Admin",request_path=request.path)
 
 @application.route('/admindb/quiz_dashboard/')
 def quiz_dashboard():
@@ -186,7 +200,7 @@ def quiz_dashboard():
     Quizzes=Quiz.query.all()
     Question=Questions.query.all()
 
-    return render_template('quiz_dashboard.html',quizzes=Quizzes,Question=Question,user="Admin")
+    return render_template('quiz_dashboard.html',quizzes=Quizzes,Question=Question,user="Admin",request_path=request.path)
 
 
    
@@ -197,6 +211,8 @@ def summary_dashboard():
         return redirect("url_for('Admin_Login')")
     
     users=User.query.all()
+    Total_score=Scores.query.all()
+    
     subject_scores=get_total_scores_by_subject()
     subject_attempt=get_user_attempts_by_subject()
 
@@ -214,8 +230,8 @@ def summary_dashboard():
         pie_y_values.append(user_att)
     
 
-    return render_template('summary.html',user="Admin",users=users,bar_X_subjects=bar_x_values, bar_y_scores=bar_y_values, bar_Colors=bar_color,
-        pie_X_subjects=pie_x_values, pie_y_scores=pie_y_values, pie_Colors=pie_color)
+    return render_template('summary.html',user="Admin",users=users,total_score=Total_score,bar_X_subjects=bar_x_values, bar_y_scores=bar_y_values, bar_Colors=bar_color,
+        pie_X_subjects=pie_x_values, pie_y_scores=pie_y_values, pie_Colors=pie_color,request_path=request.path)
 
 @application.route('/userdb',methods=['GET','POST'])
 def userdb():
@@ -225,7 +241,8 @@ def userdb():
     
     quiz=Quiz.query.all()
 
-    return render_template('User_Dashboard.html',quiz=quiz)
+    return render_template('User_Dashboard.html',quiz=quiz,request_path=request.path)
+
 @application.route('/search',methods=['GET'])
 def search():
     
@@ -294,11 +311,38 @@ def scores():
     user_id=session['user']
     scores=Scores.query.filter_by(user_score_id=user_id).all()
     
-    return render_template('user_scores.html',scores=scores)
+    return render_template('user_scores.html',scores=scores,request_path=request.path)
 
-@application.route('/user_summary',methods=['GET','POST'])
-def user_summary():
-    return render_template('User_Dashboard.html')
+@application.route('/userdb/user_summary/<int:user_id>',methods=['GET','POST'])
+def user_summary(user_id):
+    if 'name' not in session:
+        flash('please login')
+        return redirect(url_for('Login'))
+    
+    users=User.query.get_or_404(user_id)
+    user_score=Scores.query.filter_by(user_score_id=user_id)
+
+    
+    subject_scores=get_no_of_subject_by_quiz(user_id)
+    
+    #.strftime("%Y-%m-%d %H:%M")
+    
+    # subject_attempt=get_user_attempts_by_subject()
+
+    # user_bar_color=[generate_color() for _ in range(len(subject_scores))]
+    # user_pie_color=[generate_color() for _ in range(len(subject_scores))]
+
+    # bar_x_values,bar_y_values,pie_x_values,pie_y_values=[],[],[],[]
+
+    # for subjects,scores in subject_scores:
+    #     bar_x_values.append(subjects)
+    #     bar_y_values.append(scores)
+
+    # for subjects,user_att in subject_attempt:
+    #     pie_x_values.append(subjects)
+    #     pie_y_values.append(user_att)
+    
+    return render_template('user_summary.html')
 
 @application.route('/userdb/user_view_quiz/<int:quiz_id>',methods=['GET','POST'])
 def user_view_quiz(quiz_id):
@@ -310,7 +354,7 @@ def user_view_quiz(quiz_id):
     chapter=Chapter.query.filter_by(chap_id=quiz.chap_id).first()
     subject=Subject.query.filter_by(sub_id=chapter.sub_id).first()
 
-    return render_template('user_view_quiz.html',quiz=quiz,chapter=chapter.chap_title,subject=subject.sub_name)
+    return render_template('user_view_quiz.html',quiz=quiz,chapter=chapter.chap_title,subject=subject.sub_name,request_path=request.path)
 
 @application.route('/userdb/user_start_quiz/<int:quiz_id>',methods=['GET','POST'])
 def user_start_quiz(quiz_id):
@@ -329,7 +373,7 @@ def user_start_quiz(quiz_id):
     
     if request.method=="POST":
         userAnswer=request.get_json()
-        time=datetime.now()
+        time=datetime.now(timezone.utc) 
        
         for ques_id, correct_ans in correctAnswer.items():
             if ques_id not in userAnswer:
@@ -378,7 +422,7 @@ def create_subject():
         flash("Something went wrong")
         return render_template('subject.html', action="Creation")
 
-    return render_template('subject.html', action="Create")
+    return render_template('subject.html', action="Create",request_path=request.path)
 
 
 @application.route('/admindb/edit_subject/<int:sub_id>',methods=['GET','POST'])
@@ -395,7 +439,7 @@ def edit_subject(sub_id):
         data.session.commit()
         flash(f"{ subject.sub_name } Edited Successfully")
         return redirect(url_for('admindb'))
-    return render_template('subject.html',action="Edit",subject=subject)
+    return render_template('subject.html',action="Edit",subject=subject,request_path=request.path)
 
 @application.route('/admindb/delete_subject/<int:sub_id>',methods=['GET','POST'])
 def delete_subject(sub_id):
@@ -410,7 +454,7 @@ def delete_subject(sub_id):
     data.session.delete(subject)
     data.session.commit()
     flash(f"{ subject.sub_name } deleted Successfully")
-    return redirect(url_for('admindb'))
+    return redirect(url_for('admindb',request_path=request.path))
 
 @application.route('/admindb/create_chapter/<int:sub_id>',methods=['GET', 'POST'])
 def create_chapter(sub_id):
@@ -435,7 +479,7 @@ def create_chapter(sub_id):
         flash(f"{chap_title} Created Successfully")
         return redirect(url_for('admindb'))
 
-    return render_template('chapter.html', action="Create")
+    return render_template('chapter.html', action="Create",request_path=request.path)
 
 
 @application.route('/admindb/edit_chapter/<int:chap_id>,<int:sub_id>',methods=['GET','POST'])
@@ -453,7 +497,7 @@ def edit_chapter(chap_id,sub_id):
         data.session.commit()
         flash(f"{ chapter.chap_title } Edited Successfully")
         return redirect(url_for('admindb'))
-    return render_template('chapter.html',action="Edit",chapter=chapter)
+    return render_template('chapter.html',action="Edit",chapter=chapter,request_path=request.path)
 
 @application.route('/admindb/delete_chapter/<int:chap_id>,<int:sub_id>',methods=['GET','POST'])
 def delete_chapter(chap_id,sub_id):
@@ -508,7 +552,7 @@ def create_quiz():
         flash(f"{quiz_title} Created Successfully")
         return redirect(url_for('quiz_dashboard'))
     
-    return render_template('quiz_creation.html',chapters=chapters,action='Create',quiz_title=quiz_title)
+    return render_template('quiz_creation.html',chapters=chapters,action='Create',quiz_title=quiz_title,request_path=request.path)
 
 @application.route('/admindb/quiz_dashboard/edit_quiz/<int:quiz_id>',methods=['GET','POST'])
 def edit_quiz(quiz_id):
@@ -533,7 +577,7 @@ def edit_quiz(quiz_id):
         data.session.commit()
         flash(f"{ quiz.quiz_title } Edited Successfully")
         return redirect(url_for('quiz_dashboard'))
-    return render_template('quiz_creation.html',action="Edit",chapters=chapters,quiz_title=quiz.quiz_title,quiz=quiz)
+    return render_template('quiz_creation.html',action="Edit",chapters=chapters,quiz_title=quiz.quiz_title,quiz=quiz,request_path=request.path)
 
 @application.route('/admindb/quiz_dashboard/delete_quiz/<int:quiz_id>',methods=['GET','POST'])
 def delete_quiz(quiz_id):
@@ -577,7 +621,7 @@ def create_question(quiz_id):
         flash(f"{ ques_title } Created Successfully")
 
 
-    return render_template('question.html',action='Create',quiz=quiz)
+    return render_template('question.html',action='Create',quiz=quiz,request_path=request.path)
 
 @application.route('/admindb/quiz_dashboard/edit_question/<int:quiz_id>,<int:question_id>',methods=['GET','POST'])
 def edit_question(quiz_id,question_id):
@@ -619,7 +663,7 @@ def edit_question(quiz_id,question_id):
 
         flash(f"{ quiz.quiz_title } Edited Successfully")
         return redirect(url_for('quiz_dashboard'))
-    return render_template('Edit_question.html',action="Edit",quiz=quiz,question=question)
+    return render_template('Edit_question.html',action="Edit",quiz=quiz,question=question,request_path=request.path)
 
 @application.route('/admindb/quiz_dashboard/delete_question/<int:question_id>',methods=['GET','POST'])
 def delete_question(question_id):

@@ -84,7 +84,7 @@
                 <a href="{{ url_for('scores') }}">Scores</a>
             </div>
             <div id="user_summary" class="user-summary-class">
-                <a href="{{ url_for('user_summary') }}">Summary</a>
+                <a href="{{ url_for('user_summary',user_id=session['user']) }}">Summary</a>
             </div>
            
             <div id="user_logout" class="user-logout-class">
