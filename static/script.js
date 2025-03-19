@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let popupbox = document.querySelector(".popup-box");
     let submit = document.getElementById("Submit");
     let cancel = document.getElementById("Cancel");
+
     if (submit && cancel) {
         submit.addEventListener("click", function () {
             popupoverlay.style.display = "block";
@@ -39,48 +40,145 @@ document.addEventListener("DOMContentLoaded", function () {
         })
     }
 
-    let ChartData = document.getElementById("chartdata");
+    // Handle Admin Chart Data
+    let chartData = document.getElementById("chartData");
 
-    if (!chartData) {
-        console.error("chartData div not found!");
-        return;
+    if (chartData) {
+        console.log("admin chart found");
+        console.log("Raw dataset values:", chartData.dataset);
+        try {
+            let barXSubjects = JSON.parse(chartData.dataset.barXSubjects || "[]");
+            let barYScores = JSON.parse(chartData.dataset.barYScores || "[]");
+            let barColors = JSON.parse(chartData.dataset.barColors || "[]");
+
+            let pieXSubjects = JSON.parse(chartData.dataset.pieXSubjects || "[]");
+            let pieYScores = JSON.parse(chartData.dataset.pieYScores || "[]");
+            let pieColors = JSON.parse(chartData.dataset.pieColors || "[]");
+
+
+
+            new Chart("barChart", {
+                type: "bar",
+                data: {
+                    labels: barXSubjects,
+                    datasets: [{
+                        backgroundColor: barColors,
+                        data: barYScores
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "Subject wise top scores"
+                        }, legend: { display: false }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+
+            new Chart("pieChart", {
+                type: "doughnut",
+                data: {
+                    labels: pieXSubjects,
+                    datasets: [{
+                        backgroundColor: pieColors,
+                        data: pieYScores
+                    }]
+                },
+
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "Subject wise user attempts"
+                        },
+                        legend: { display: false }
+                    }, 
+                    responsive: true, 
+                    maintainAspectRatio: false
+                }
+            });
+        } catch (error) {
+            console.error("Error parsing Admin ChartData:", error);
+        }
+    } else {
+        console.warn("Admin chartData not found. Skipping admin charts.");
     }
-    console.log("Raw dataset values:", chartData.dataset);
-
-    let barXSubjects = JSON.parse(chartData.dataset.barXSubjects || "[]");
-    let barYScores = JSON.parse(chartData.dataset.barYScores || "[]");
-    let barColors = JSON.parse(chartData.dataset.barColors || "[]");
-
-    let pieXSubjects = JSON.parse(chartData.dataset.pieXSubjects || "[]");
-    let pieYScores = JSON.parse(chartData.dataset.pieYScores || "[]");
-    let pieColors = JSON.parse(chartData.dataset.pieColors || "[]");
 
 
- 
-    new Chart("barChart", {
-        type: "bar",
-        data: {
-            labels: barXSubjects,
-            datasets: [{
-                backgroundColor: barColors,
-                data: barYScores
-            }]
-        },
-        options: { responsive: true }
-    });
 
-   
-    new Chart("pieChart", {
-        type: "pie",
-        data: {
-            labels: pieXSubjects,
-            datasets: [{
-                backgroundColor: pieColors,
-                data: pieYScores
-            }]
-        },
-        options: { responsive: true }
-    });
+
+    // Handle User Chart Data
+    let User_ChartData = document.getElementById("UserChartData");
+
+    if (User_ChartData) {
+        console.log("User ChartData found");
+        console.log("Raw dataset values:", User_ChartData.dataset);
+
+        try {
+            let user_barXSubjects = JSON.parse(User_ChartData.dataset.barXSubjects || "[]");
+            let user_barYScores = JSON.parse(User_ChartData.dataset.barYAttemps || "[]");
+            let user_barColors = JSON.parse(User_ChartData.dataset.barColors || "[]");
+
+            let user_pieXSubjects = JSON.parse(User_ChartData.dataset.pieXMonth || "[]");
+            let user_pieYScores = JSON.parse(User_ChartData.dataset.pieYUserAtt || "[]");
+            let user_pieColors = JSON.parse(User_ChartData.dataset.pieColors || "[]");
+
+            new Chart("UserBarChart", {
+                type: "bar",
+                data: {
+                    labels: user_barXSubjects,
+                    datasets: [{
+                        backgroundColor: user_barColors,
+                        data: user_barYScores
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "Subject wise no. of quizzes attempted"
+                        }, legend: { display: false }
+                    },
+
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            new Chart("UserPieChart", {
+                type: "doughnut",
+                data: {
+                    labels: user_pieXSubjects,
+                    datasets: [{
+                        backgroundColor: user_pieColors,
+                        data: user_pieYScores
+                    }]
+                },
+                options: {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "Month wise no. of quizzes attempted"
+                        }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+
+                }
+            });
+
+        } catch (error) {
+            console.error("Error parsing User ChartData:", error);
+
+        }
+
+    } else {
+        console.warn("User chartData not found. Skipping user charts.");
+    }
 
 
 

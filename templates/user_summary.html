@@ -1,5 +1,5 @@
 {% extends 'index.html' %}
-{% block title %} Question {{ action }} {% endblock %}
+{% block title %} Summary {% endblock %}
 
 {% block navbar %}
 {% include "user-navbar.html" %}
@@ -11,37 +11,21 @@
 
     </div>
 
-    <div id="users">
-        <table>
-            <tr>
-                <td> User Id </td>
-                <td> User Name </td>
-                <td> Average Score </td>
-            </tr>
-            {% for user in users %}
-            <tr>
-                <td> {{ user.id }}</td>
-                <td> {{ user.username }}</td>
-        
-                {% set user_scores = total_score | selectattr("user_score_id", "equalto", user.id) | map(attribute="score_total") | list %}
-                {% set total = user_scores | sum %}
-                {% set count = user_scores | length %}
-                
-                {% if count > 0 %}
-                    {% set average_score = total / count %}
-                    <td>{{ average_score | round(2) }}</td>
-                {% else %}
-                    <td> No Score </td>
-                {% endif %}
-            </tr>
-            {% endfor %}
-        </table>
 
-       
+    <div id="UserChartData" data-bar-x-subjects='{{ bar_X_subjects | tojson | safe }}'
+        data-bar-y-attemps='{{ bar_y_attemps | tojson | safe }}' data-bar-colors='{{ bar_Colors | tojson | safe }}'
+        data-pie-x-month='{{ pie_X_month | tojson | safe }}'
+        data-pie-y-user-att='{{ pie_y_user_att | tojson | safe }}' data-pie-colors='{{ pie_Colors | tojson | safe }}'>
     </div>
-   
-    <canvas id="barChart"></canvas>
-    <canvas id="pieChart"></canvas>
+    
+    <div style="display: flex; justify-content: space-around; align-items: center; width: 100%; height: 70vh;">
+        <div style="flex: 1; max-width: 600px; height: 100%;">
+            <canvas id="UserBarChart"></canvas>
+        </div>
+        <div style="flex: 1; max-width: 600px; height: 100%;">
+            <canvas id="UserPieChart"></canvas>
+        </div>
+    </div>
 
 
 

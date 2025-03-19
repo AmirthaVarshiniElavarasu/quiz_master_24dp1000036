@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash,check_password_hash
 from datetime import datetime,timezone
 from flask_bcrypt import Bcrypt
-import random
+import random,calendar
 
 
 
@@ -55,7 +55,7 @@ def get_user_attempts_by_subject():
 
 def get_total_scores_by_subject():
     total_scores = (
-        data.session.query(Subject.sub_name,data.func.sum(Scores.score_total).label("total_score"))
+        data.session.query(Subject.sub_name,data.func.max(Scores.score_total).label("total_score"))
         .join(Chapter, Subject.sub_id == Chapter.sub_id)
         .join(Quiz, Chapter.chap_id == Quiz.chap_id)
         .join(Scores, Quiz.quiz_id == Scores.quiz_score_id)
@@ -77,6 +77,18 @@ def get_no_of_subject_by_quiz(user_id):
         .group_by(Subject.sub_name)
         .all())
     return Quiz_subjects
+
+def get_no_of_attempts_by_month(user_id):
+    quiz_attempt=(
+        data.session.query(
+            data.func.extract('year',Scores.score_time_stamp).label('year'),
+            data.func.extract('month',Scores.score_time_stamp).label('month'),
+            data.func.count(data.func.distinct(Scores.quiz_score_id)).label("no_of_quiz"))
+            .filter(Scores.user_score_id==user_id)
+            .group_by('year', 'month')
+            .order_by('year', 'month')
+            .all())
+    return quiz_attempt
 
 
 @application.route('/',methods=['GET','POST'])
@@ -220,7 +232,7 @@ def summary_dashboard():
     pie_color=[generate_color() for _ in range(len(subject_scores))]
 
     bar_x_values,bar_y_values,pie_x_values,pie_y_values=[],[],[],[]
-
+    
     for subjects,scores in subject_scores:
         bar_x_values.append(subjects)
         bar_y_values.append(scores)
@@ -319,30 +331,30 @@ def user_summary(user_id):
         flash('please login')
         return redirect(url_for('Login'))
     
-    users=User.query.get_or_404(user_id)
-    user_score=Scores.query.filter_by(user_score_id=user_id)
+ 
 
     
     subject_scores=get_no_of_subject_by_quiz(user_id)
+    Quiz_attempts=get_no_of_attempts_by_month(user_id)
+
+   
+    user_bar_color=[generate_color() for _ in range(len(subject_scores))]
+    user_pie_color=[generate_color() for _ in range(len(subject_scores))]
+
+    bar_x_values,bar_y_values,pie_x_values,pie_y_values=[],[],[],[]
+
+    for subjects,attemps in subject_scores:
+        bar_x_values.append(subjects)
+        bar_y_values.append(attemps)
+
+    for year,month,user_att in Quiz_attempts:
+        year_month=f"{calendar.month_name[month]} {year}"
+        
+        pie_x_values.append(year_month)
+        pie_y_values.append(user_att)
     
-    #.strftime("%Y-%m-%d %H:%M")
-    
-    # subject_attempt=get_user_attempts_by_subject()
-
-    # user_bar_color=[generate_color() for _ in range(len(subject_scores))]
-    # user_pie_color=[generate_color() for _ in range(len(subject_scores))]
-
-    # bar_x_values,bar_y_values,pie_x_values,pie_y_values=[],[],[],[]
-
-    # for subjects,scores in subject_scores:
-    #     bar_x_values.append(subjects)
-    #     bar_y_values.append(scores)
-
-    # for subjects,user_att in subject_attempt:
-    #     pie_x_values.append(subjects)
-    #     pie_y_values.append(user_att)
-    
-    return render_template('user_summary.html')
+    return render_template('user_summary.html',bar_X_subjects=bar_x_values, bar_y_attemps=bar_y_values, bar_Colors=user_bar_color,
+        pie_X_month=pie_x_values, pie_y_user_att=pie_y_values, pie_Colors=user_pie_color,request_path=request.path)
 
 @application.route('/userdb/user_view_quiz/<int:quiz_id>',methods=['GET','POST'])
 def user_view_quiz(quiz_id):
