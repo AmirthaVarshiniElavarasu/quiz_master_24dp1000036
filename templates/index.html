@@ -4,19 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <title>{% block title %} Index Page {% endblock %}</title>
-    
+
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     <script src="/static/script.js" charset="UTF-8"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    
+
 </head>
 
 <body id="index-page">
-    
+
     <nav>{% block navbar %} {% endblock %}</nav>
     {% block content %}
     <center>
@@ -35,9 +38,11 @@
                             <a href="{{ url_for('Login') }}"><input type="button" value="Log in" id="loginbutton"></a>
                         </td>
                         <td>
-                            <a href="{{ url_for('Admin_Login') }}"><input type="button" value="Admin Log in" id="adminloginbutton"></a>
+                            <a href="{{ url_for('Admin_Login') }}"><input type="button" value="Admin Log in"
+                                    id="adminloginbutton"></a>
                         </td>
-                        <td><a href="{{ url_for('registration') }}"><input type="button" value="Registration" id="registbutton"></a></td>
+                        <td><a href="{{ url_for('registration') }}"><input type="button" value="Registration"
+                                    id="registbutton"></a></td>
                     </tr>
 
 

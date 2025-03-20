@@ -12,6 +12,15 @@
     <form method="POST">
         <div>
             <table>
+                {% if request_path.rstrip('/') == "/admindb/create_chapter"  %}
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                {% endif %}
                 <tr>
                     <td>
                         <label for="new_chap_name">Chapter Name:</label>

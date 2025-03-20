@@ -12,7 +12,7 @@
         <form method="POST" action="{{ url_for('Admin_Login') }}">
             <table>
                 <tr>
-                    {% if request_path.rstrip('/') == "/Login" %}
+                    {% if request_path.rstrip('/') == "/Admin_Login" %}
                     {% with messages = get_flashed_messages() %}
                     {% if messages %}
                     {% for message in messages %}

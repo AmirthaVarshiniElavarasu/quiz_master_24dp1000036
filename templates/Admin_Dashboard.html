@@ -8,15 +8,26 @@
 {% block content %}
 <center>
     <div id="adminsub">
+        {% if request_path.rstrip('/') == "/admindb" %}
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% endif %}
+
         {% for subject in Subjects %}
-        <table>
+        <table >
+           
             <tr>
 
                 <td>
                     <h1>{{ subject.sub_name }}</h1>
                 </td>
-                <td><a href="{{ url_for('edit_subject',sub_id=subject.sub_id) }}"><i class="fa fa-edit"></a></td>
-                <td><a href="{{ url_for('delete_subject',sub_id=subject.sub_id) }}"><i class="fa fa-trash"></i></a></td>
+                <td><a href="{{ url_for('edit_subject',sub_id=subject.sub_id) }}" class="icon-button edit-btn"><i class="fa fa-edit"></a></td>
+                <td><a href="{{ url_for('delete_subject',sub_id=subject.sub_id) }}" class="icon-button delete-btn"><i class="fa fa-trash"></i></a></td>
             </tr>
 
             <tr>

@@ -93,7 +93,6 @@ def get_no_of_attempts_by_month(user_id):
 
 @application.route('/',methods=['GET','POST'])
 def index():
-    
     if request.method=='POST':
         if 'user' in session:
             return render_template("User_Dashboard.html",username=session['name'])
@@ -112,19 +111,19 @@ def registration():
         dob_1=datetime.strptime(dob, '%Y-%m-%d').date()
         hased_password=bcrypt.generate_password_hash(password).decode('utf-8')
 
-        if User.query.filter_by(username=username).first():
-            return flash("Username already exists!")
+        if User.query.filter_by(email=email).first():
+            flash("User already exists!", "error") 
+            return redirect(url_for('registration'))
         else:
             new_user=User(email=email,password=hased_password,username=username,qualification=qualification,gender=gender,dob=dob_1)
             data.session.add(new_user)
             data.session.commit()
             # Process the data
-            # Example: Store it in the database
+            # Store it in the database
             flash('Registration successful!')
             return redirect(url_for('Login'))
 
     return render_template('registration.html',request_path=request.path)
-
 
 @application.route('/Login', methods=['GET', 'POST'])
 def Login():
@@ -157,24 +156,18 @@ def Logout():
     flash('you have been logged out.')
     return redirect(url_for('Login',request_path=request.path))
 
-
-
 @application.route('/Admin_Login', methods=['GET', 'POST'])
 def Admin_Login():
     if request.method == 'POST':
         admin_email = request.form.get('admin_email')
         admin_password = request.form.get('admin_password')
         
-        
-
         user_admin = Admin.query.filter_by(admin_email=admin_email).first()
         
         if not user_admin:
-            
             flash('User not found.')
             return render_template('admin_login_page.html')
 
-        
         if bcrypt.check_password_hash(user_admin.admin_password, admin_password):
             session['admin'] = user_admin.admin_id
             flash('Admin Login successful.')
@@ -199,7 +192,6 @@ def admindb():
     Subjects=Subject.query.all()
     Chapters=Chapter.query.all()
     Quizzes=Quiz.query.all()
-
 
     return render_template('Admin_Dashboard.html',Subjects=Subjects,Chapters=Chapters,quiz=Quizzes,user="Admin",request_path=request.path)
 
@@ -252,17 +244,16 @@ def userdb():
         return redirect(url_for('Login'))
     
     quiz=Quiz.query.all()
-
+    
     return render_template('User_Dashboard.html',quiz=quiz,request_path=request.path)
 
 @application.route('/search',methods=['GET'])
 def search():
-    
     s=request.args.get("q","").strip()
     source= request.args.get("source","").strip()
     
-    User_results,quiz_results,subject_result,chapter_result,scores_result=[],[],[],[],[]
-    
+    User_results,quiz_results,subject_result,chapter_result,scores_result=[],[],[],[],[] #customize search
+    Users,Subjects,Quizzes,Chapters,Score=[],[],[],[],[] # total search
     if session.get('admin'):  
         user_id = session['admin']
     elif session.get('user'):  
@@ -275,6 +266,22 @@ def search():
         return jsonify({"error":"Empty search query"}),400
     
     if "admin-navbar.html" in source:
+        
+        if s.lower().startswith("user"):
+            Users=User.query.all()
+
+        if s.lower().startswith("subject"):
+            Subjects=Subject.query.all()
+
+        if s.lower().startswith("quiz"):
+            Quizzes=Quiz.query.all()
+
+        if s.lower().startswith("chapter"):
+            Chapters=Chapter.query.all()
+
+        if s.lower().startswith("score"):
+            Score=Scores.query.all()
+        
         User_results=User.query.filter(
             User.id.like(f"%{s}%")| User.username.ilike(f"%{s}%")| 
             User.gender.ilike(f"%{s}%")|User.email.ilike(f"%{s}%")).all()
@@ -290,6 +297,19 @@ def search():
 
        
     elif "user-navbar.html" in source:
+        
+        if s.lower().startswith("subject"):
+            Subjects=Subject.query.all()
+
+        if s.lower().startswith("quiz"):
+            Quizzes=Quiz.query.all()
+
+        if s.lower().startswith("chapter"):
+            Chapters=Chapter.query.all()
+
+        if s.lower().startswith("score"):
+            Score=Scores.query.filter_by(user_score_id=user_id).all()
+
         quiz_results = Quiz.query.filter(
             Quiz.quiz_id.like(f"%{s}%")|Quiz.quiz_title.ilike(f"%{s}%")).all()
         
@@ -300,15 +320,20 @@ def search():
             Chapter.chap_id.like(f"%{s}%")|Chapter.chap_title.ilike(f"%{s}%")).all()
         
         scores_result=Scores.query.filter(
-            Scores.score_id==user_id,Scores.quiz_score_id.like(f"%{s}%")|Scores.score_total.like(f"%{s}%"))
+            Scores.user_score_id==user_id,Scores.quiz_score_id.like(f"%{s}%")|Scores.score_total.like(f"%{s}%")|Scores.score_total.like(f"%{s}%"))
         
 
     results = {
-            "Users": [{"Id":u.id,"Username":u.username,"Email":u.email,"Qualification":u.qualification,"Gender":u.gender,"Date_of_Birth":u.dob}for u in User_results],
-            "Quizzes":[{"Quiz_Id":q.quiz_id,"Quiz_Title":q.quiz_title,"Quiz_Chapter_Id":q.chap_id,"Quiz_Start_Date":q.quiz_date,"Quiz_Duration":q.quiz_time} for q in quiz_results],
-            "Subjects":[{"Subject_Id":s.sub_id,"Subject_Name":s.sub_name}for s in subject_result],
-            "Chapters":[{"Chapter_Id":c.chap_id,"Chapter_Title":c.chap_title}for c in chapter_result],
-            "Scores":[{"Quiz_Id":sc.quiz_score_id,"score_id":sc.score_id,"Total_Score":sc.score_total}for sc in scores_result]
+            "Users":[{"Id":u.id,"Username":u.username,"Email":u.email,"Qualification":u.qualification,"Gender":u.gender,"Date_of_Birth":u.dob.strftime('%d-%m-%Y')}for u in Users],
+            "Subjects":[{"Subject_Id":s.sub_id,"Subject_Name":s.sub_name}for s in Subjects],
+            "Quizzes":[{"Quiz_Id":q.quiz_id,"Quiz_Title":q.quiz_title,"Quiz_Chapter_Id":q.chap_id,"Quiz_Start_Date":q.quiz_date,"Quiz_Duration":q.quiz_time} for q in Quizzes],
+            "Chapters":[{"Chapter_Id":c.chap_id,"Chapter_Title":c.chap_title}for c in Chapters],
+            "Scores":[{"User_Id":sc.user_score_id,"Quiz_Id":sc.quiz_score_id,"score_id":sc.score_id,"Total_Score":sc.score_total}for sc in Score],
+            "User": [{"Id":u.id,"Username":u.username,"Email":u.email,"Qualification":u.qualification,"Gender":u.gender,"Date_of_Birth":u.dob.strftime('%d-%m-%Y')}for u in User_results],
+            "Quiz":[{"Quiz_Id":q.quiz_id,"Quiz_Title":q.quiz_title,"Quiz_Chapter_Id":q.chap_id,"Quiz_Start_Date":q.quiz_date,"Quiz_Duration":q.quiz_time} for q in quiz_results],
+            "Subject":[{"Subject_Id":s.sub_id,"Subject_Name":s.sub_name}for s in subject_result],
+            "Chapter":[{"Chapter_Id":c.chap_id,"Chapter_Title":c.chap_title}for c in chapter_result],
+            "Score":[{"Quiz_Id":sc.quiz_score_id,"score_id":sc.score_id,"Total_Score":sc.score_total}for sc in scores_result]
         }  
 
     return jsonify(results)  
@@ -331,13 +356,9 @@ def user_summary(user_id):
         flash('please login')
         return redirect(url_for('Login'))
     
- 
-
-    
     subject_scores=get_no_of_subject_by_quiz(user_id)
     Quiz_attempts=get_no_of_attempts_by_month(user_id)
 
-   
     user_bar_color=[generate_color() for _ in range(len(subject_scores))]
     user_pie_color=[generate_color() for _ in range(len(subject_scores))]
 
@@ -466,6 +487,7 @@ def delete_subject(sub_id):
     data.session.delete(subject)
     data.session.commit()
     flash(f"{ subject.sub_name } deleted Successfully")
+    
     return redirect(url_for('admindb',request_path=request.path))
 
 @application.route('/admindb/create_chapter/<int:sub_id>',methods=['GET', 'POST'])
@@ -482,7 +504,6 @@ def create_chapter(sub_id):
         if Chapter.query.filter_by(chap_title=chap_title).first():  
             flash('This chapter already exists.')
             return render_template('chapter.html', action="Creation",sub_id=subject.sub_id)
-        
         
         new_chap = Chapter(chap_title=chap_title, chap_description=chap_description,sub_id=subject.sub_id)
         data.session.add(new_chap)
@@ -599,9 +620,8 @@ def delete_quiz(quiz_id):
     
     quiz=Quiz.query.get_or_404(quiz_id)
     if quiz.quiz_ques:
-
         flash("please delete the Questions")
-        return redirect("url_for('admindb')")
+        return redirect(url_for('quiz_dashboard'))
     data.session.delete(quiz)
     data.session.commit()
     flash(f"{quiz.quiz_title} deleted")

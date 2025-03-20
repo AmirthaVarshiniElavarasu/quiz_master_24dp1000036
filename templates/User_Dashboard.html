@@ -11,6 +11,15 @@
     <div id="userdashboard">
 
         <table>
+             {% if request_path.rstrip('/') == "/userdb" %}
+             {% with messages = get_flashed_messages() %}
+             {% if messages %}
+             {% for message in messages %}
+             <p>{{ message }}</p>
+             {% endfor %}
+             {% endif %}
+             {% endwith %}
+             {% endif %}
             <h1>Upcoming Quizzes</h1>
             <tr>
                 <td>ID</td>

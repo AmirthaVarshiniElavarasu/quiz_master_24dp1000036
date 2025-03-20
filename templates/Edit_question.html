@@ -11,6 +11,15 @@
     <form method="POST" action="">
         <div>
             <table>
+                 <!-- {% if request_path.rstrip('/') == "/admindb" || ""  %} -->
+                 {% with messages = get_flashed_messages() %}
+                 {% if messages %}
+                 {% for message in messages %}
+                 <p>{{ message }}</p>
+                 {% endfor %}
+                 {% endif %}
+                 {% endwith %}
+                 {% endif %}
                 <tr>
                     <td><label for="quiz_title">Quiz Title:</label></td>
                     <td>

@@ -1,7 +1,15 @@
 /* General Body Styling (inherits from previous) */
-#index-page body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+
+.outfit {
+    font-family: "Outfit", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 200;
+    font-style: normal;
+}
+
+#index-page {
+    
+    background-color: #DDEB9D;
     margin: 0;
     padding: 0;
 }
@@ -18,14 +26,18 @@
 
 /* Table Styling */
 #index-page table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     max-width: 500px;
     margin: 20px auto;
     border-spacing: 15px;
-    background-color: #fff;
+    background-color: #A0C878;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(80, 120, 60, 0.5);
+    ;
 }
 
 /* Input Fields Styling */
@@ -35,9 +47,23 @@
 #index-page input[type="date"],
 #index-page button[type="submit"],
 #index-page button {
+    background-color: azure;
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+#index-page input[type="text"]:hover,
+#index-page input[type="email"]:hover,
+#index-page input[type="password"]:hover,
+#index-page input[type="date"]:hover,
+#index-page button[type="submit"]:hover,
+#index-page button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid grey;
     border-radius: 5px;
     font-size: 1em;
     box-sizing: border-box;
@@ -53,7 +79,7 @@
 #index-page button{
     width: auto;
     padding: 10px 20px;
-    background-color: #007BFF;
+    background-color: #27667B;
     color: white;
     font-size: 1em;
     border: none;
@@ -70,7 +96,7 @@
 #index-page button[type="button"]:hover,
 #index-page button:hover
 {
-    background-color: #0056b3;
+    background-color: #143D60;
 }
 
 /* Headings Styling */
@@ -148,4 +174,38 @@
     top: 20%;
     left: 20%;
     z-index: 2;
+}
+
+/* Edit and delete button of subject/chapter/quiz/questions */
+
+.fa-edit{
+    color: #27667B;
+    font-size: 18px;
+    transition: color 0.3s ease-in-out;
+}
+.fa-trash{
+    color: #D9534F;
+    font-size: 18px;
+    transition: color 0.3s ease-in-out;
+}
+.fa-edit :hover{
+    color: #143D60;
+}
+.fa-trash :hover{
+    color: #A94442;
+}
+
+
+/* Table arrangement */
+
+table {
+   display: flex;
+   flex-wrap: wrap;
+   gap:20px;
+   justify-content: flex-start;
+}
+@media (max-width: 768px) {
+    table-wrapper {
+        flex-direction: column; /* Stack tables on smaller screens */
+    }
 }

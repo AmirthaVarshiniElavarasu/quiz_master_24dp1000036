@@ -337,7 +337,7 @@ function search() {
     }
 
     if (query === "") {
-        document.getElementById("results").innerHTML = "<p style='color:red;'>Please enter a search term.</p>";
+        document.getElementById("results").innerHTML = "";
         return;
     }
 
@@ -353,14 +353,6 @@ function search() {
                     resultsDiv.innerHTML += `<p> Id: ${user.Id} - Username: ${user.Username} - Email: ${user.Email} - Qualification: ${user.Qualification} - Gender: ${user.Gender} - Date of Birth: ${user.Date_of_Birth}</p>`;
                 });
             }
-
-            if (data.Quizzes && data.Quizzes.length > 0) {
-                resultsDiv.innerHTML += "<h3>Quizzes</h3>";
-                data.Quizzes.forEach(quiz => {
-                    resultsDiv.innerHTML += `<p> Quiz Id: ${quiz.Quiz_Id} - Quiz Title: ${quiz.Quiz_Title} - Quiz Chapter Id: ${quiz.Quiz_Chapter_Id} - Quiz Start Date: ${quiz.Quiz_Start_Date} - Quiz Duration: ${quiz.Quiz_Duration}</p>`;
-                });
-            }
-
             if (data.Subjects && data.Subjects.length > 0) {
                 resultsDiv.innerHTML += "<h3>Subjects</h3>";
                 data.Subjects.forEach(subject => {
@@ -368,6 +360,12 @@ function search() {
                 });
             }
 
+            if (data.Quizzes && data.Quizzes.length > 0) {
+                resultsDiv.innerHTML += "<h3>Quizzes</h3>";
+                data.Quizzes.forEach(quiz => {
+                    resultsDiv.innerHTML += `<p> Quiz Id: ${quiz.Quiz_Id} - Quiz Title: ${quiz.Quiz_Title} - Quiz Chapter Id: ${quiz.Quiz_Chapter_Id} - Quiz Start Date: ${quiz.Quiz_Start_Date} - Quiz Duration: ${quiz.Quiz_Duration}</p>`;
+                });
+            }
             if (data.Chapters && data.Chapters.length > 0) {
                 resultsDiv.innerHTML += "<h3>Chapters</h3>";
                 data.Chapters.forEach(chapter => {
@@ -377,9 +375,43 @@ function search() {
             if (data.Scores && data.Scores.length > 0) {
                 resultsDiv.innerHTML += "<h3>Scores</h3>";
                 data.Scores.forEach(score => {
-                    resultsDiv.innerHTML += `<p> Scores Id: ${score.score_id} - Quiz_Id: ${score.quiz_score_id} -  Total Score: ${score.Total_Score}</p>`;
+                    resultsDiv.innerHTML += `<p> Scores Id: ${score.score_id} - User_Id:${score.User_Id} - Quiz_Id: ${score.Quiz_Id} -  Total Score: ${score.Total_Score}</p>`;
                 });
             }
+            if (data.User && data.User.length > 0) {
+                resultsDiv.innerHTML += "<h3>Users</h3>";
+                data.User.forEach(user => {
+                    resultsDiv.innerHTML += `<p> Id: ${user.Id} - Username: ${user.Username} - Email: ${user.Email} - Qualification: ${user.Qualification} - Gender: ${user.Gender} - Date of Birth: ${user.Date_of_Birth}</p>`;
+                });
+            }
+
+            if (data.Quiz && data.Quiz.length > 0) {
+                resultsDiv.innerHTML += "<h3>Quizzes</h3>";
+                data.Quiz.forEach(quiz => {
+                    resultsDiv.innerHTML += `<p> Quiz Id: ${quiz.Quiz_Id} - Quiz Title: ${quiz.Quiz_Title} - Quiz Chapter Id: ${quiz.Quiz_Chapter_Id} - Quiz Start Date: ${quiz.Quiz_Start_Date} - Quiz Duration: ${quiz.Quiz_Duration}</p>`;
+                });
+            }
+
+            if (data.Subject && data.Subject.length > 0) {
+                resultsDiv.innerHTML += "<h3>Subjects</h3>";
+                data.Subject.forEach(subject => {
+                    resultsDiv.innerHTML += `<p> Subject Id: ${subject.Subject_Id} - Subject Name: ${subject.Subject_Name}</p>`;
+                });
+            }
+
+            if (data.Chapter && data.Chapter.length > 0) {
+                resultsDiv.innerHTML += "<h3>Chapters</h3>";
+                data.Chapter.forEach(chapter => {
+                    resultsDiv.innerHTML += `<p> Chapter Id: ${chapter.Chapter_Id} - Chapter Title: ${chapter.Chapter_Title}</p>`;
+                });
+            }
+            if (data.Score && data.Score.length > 0) {
+                resultsDiv.innerHTML += "<h3>Scores</h3>";
+                data.Score.forEach(score => {
+                    resultsDiv.innerHTML += `<p> Scores Id: ${score.score_id} - Quiz_Id: ${score.Quiz_Id} -  Total Score: ${score.Total_Score}</p>`;
+                });
+            }
+           
         })
         .catch(error => {
             console.error("Search error", error);

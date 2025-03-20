@@ -11,6 +11,15 @@
     <form method="POST">
         <div>
             <table>
+                {% if request_path.rstrip('/') == "/admindb/quiz_dashboard/create_quiz" %}
+                 {% with messages = get_flashed_messages() %}
+                 {% if messages %}
+                 {% for message in messages %}
+                 <p>{{ message }}</p>
+                 {% endfor %}
+                 {% endif %}
+                 {% endwith %}
+                 {% endif %}
                 <tr>
                     <td><label for="quiz_chap_name">Chapter Name:</label></td>
                     <td><select name="quiz_chap_name" id="quiz_chap_name">

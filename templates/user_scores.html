@@ -9,16 +9,17 @@
 <center>
     <h2> Quiz Scores</h2>
     <table>
+      
         <div>
             <tr>
-            <td>ID</td>
+            <td>Quiz Id</td>
             <td>No.of Questions</td>
             <td>Date</td>
             <td>Score</td>
             </tr>
             {% for  score in  scores %}
             <tr>
-            <td>{{ score.score_id }}</td>
+            <td>{{ score.quiz_score_id }}</td>
             <td>{{score.No_of_question}}</td>
             <td>{{score.score_time_stamp.strftime('%d-%m-%Y %H:%M')}}</td>
             <td>{{score.score_total}}</td>

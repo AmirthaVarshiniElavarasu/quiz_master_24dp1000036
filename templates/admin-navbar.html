@@ -4,17 +4,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
     <style>
+        .outfit {
+            font-family: "Outfit", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 300;
+            font-style: normal;
+        }
+
         /* Styling for the navbar */
         .admin-navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: #2c3e50;
+            background-color: #27667B;
             /* Dark blue-gray */
             padding: 10px 20px;
             color: white;
-            font-family: Arial, sans-serif;
+
         }
 
         /* Common styling for all navbar items */
@@ -26,14 +36,23 @@
         .admin-navbar a {
             color: white;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 20px;
             font-weight: bold;
             padding: 8px 12px;
             transition: 0.3s;
         }
 
+        #welcome {
+            color: white;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 8px 12px;
+
+        }
+
         .admin-navbar a:hover {
-            background-color: #34495e;
+            background-color: #143D60;
             /* Slightly lighter blue-gray */
             border-radius: 5px;
         }
@@ -47,17 +66,39 @@
         }
 
         /* Logout button styling */
-        .User-logout a {
+        .logout a {
             background-color: #e74c3c;
             /* Red color */
             padding: 6px 12px;
             border-radius: 5px;
         }
 
-        .User-logout a:hover {
+        .logout a:hover {
             background-color: #c0392b;
             /* Darker red */
         }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+        .admin-navbar,.admin-search-results{
+            margin: 0;
+        }
+
+        .admin-search-results {
+            color: white;
+            background-color: #27667B;
+            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            border-radius: 0 0 15px 15px;
+
+        }
+
+        .admin-search-results h3 {
+            color: white !important;
+
+        }
+
 
         /* Make navbar responsive */
         @media (max-width: 768px) {
@@ -76,27 +117,29 @@
         }
     </style>
     <nav>
-        <div id="navbar" class="admin-navbar">
-            <div id="home" class="admin-home">
-                <a href="{{ url_for('admindb') }}">Home</a>
+        <div class="container">
+            <div id="navbar" class="admin-navbar">
+                <div id="home" class="admin-home">
+                    <a href="{{ url_for('admindb') }}">Home</a>
+                </div>
+                <div id="quiz" class="admin-quiz">
+                    <a href="{{ url_for('quiz_dashboard') }}">Quiz</a>
+                </div>
+
+                <div id="summary" class="admin-summary">
+                    <a href="{{ url_for('summary_dashboard') }}">Summary</a>
+                </div>
+                <div id="logout" class="logout">
+                    <a href="{{ url_for('Admin_Logout') }}">Logout</a>
+                </div>
+                <div id="search" class="admin-search" data-source="admin-navbar.html">
+                    <input type="search" id="admin-search" onkeyup="search()" placeholder="Search here">
+                </div>
+
+                <div id="welcome">Welcome {{ user }}</div>
             </div>
-            <div id="quiz" class="admin-quiz">
-                <a href="{{ url_for('quiz_dashboard') }}">Quiz</a>
-            </div>
-           
-            <div id="summary" class="admin-summary">
-                <a href="{{ url_for('summary_dashboard') }}">Summary</a>
-            </div>
-            <div id="logout" class="User-logout">
-                <a href="{{ url_for('Admin_Logout') }}">Logout</a>
-            </div>
-            <div id="search" class="admin-search" data-source="admin-navbar.html">
-                <input type="search" id="admin-search" onkeyup="search()" placeholder="Search here">
-            </div>
-            
-            <div>Welcome {{ user }}</div>
+            <div id="results" class="admin-search-results"></div>
         </div>
-        <div id="results"></div>
     </nav>
 
 

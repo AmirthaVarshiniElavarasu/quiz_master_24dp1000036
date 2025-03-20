@@ -12,6 +12,15 @@
     <form method="POST">
         <div>
             <table>
+                {% if request_path.rstrip('/') == "/admindb/edit_subjectindb" %}
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                {% endif %}
                 <tr>
                     <td>
                         <label for="new_sub_name">Subject Name:</label>
@@ -23,27 +32,27 @@
                 </tr>
                 <tr>
                     <td>
-                    <label for="new_sub_descrip">Description:</label>
-                </td>
-                <td>
-                    <textarea id="new_sub_descrip" name="new_sub_descrip"
-                        required>{{ subject.sub_Description if subject else '' }}</textarea>
+                        <label for="new_sub_descrip">Description:</label>
+                    </td>
+                    <td>
+                        <textarea id="new_sub_descrip" name="new_sub_descrip"
+                            required>{{ subject.sub_Description if subject else '' }}</textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <label for="new_sub_quiz_descrip">Quiz Description:</label>
-                </td>
-                <td>
-                    <textarea id="new_sub_quiz_descrip" name="new_sub_quiz_descrip"
-                        required>{{ subject.sub_quiz_descrip if subject else '' }}</textarea>
+                        <label for="new_sub_quiz_descrip">Quiz Description:</label>
+                    </td>
+                    <td>
+                        <textarea id="new_sub_quiz_descrip" name="new_sub_quiz_descrip"
+                            required>{{ subject.sub_quiz_descrip if subject else '' }}</textarea>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <input type="submit" value="{{ action }} Subject">
-                </td>
-                <td><a href="{{ url_for('admindb') }}"><button type="button" >Cancel</button></a></td>
+                        <input type="submit" value="{{ action }} Subject">
+                    </td>
+                    <td><a href="{{ url_for('admindb') }}"><button type="button">Cancel</button></a></td>
                 </tr>
             </table>
         </div>

@@ -8,6 +8,17 @@
     <form method="POST" action="{{ url_for('registration') }}">
         <table>
             <tr>
+                {% if request_path.rstrip('/') == "/registration" %}
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+                {% endif %}
+            </tr>
+            <tr>
                 <td><label for="email">Username (Email):</label></td>
                 <td><input type="email" id="email" name="email" placeholder="Enter your email-ID" required></td>
             </tr>
