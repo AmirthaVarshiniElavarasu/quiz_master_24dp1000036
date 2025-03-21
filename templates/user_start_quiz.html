@@ -8,13 +8,13 @@
 {% block content %}
 <center id="user_start_quiz">
 
-    <h2>{{ quiz.quiz_title }}</h2>
-    <p id="time">{{ quiz.quiz_time if questions else "" }}{{ ":00" if questions else "" }}</p>
+    <h1>{{ quiz.quiz_title }}</h1>
+    <h3 id="time">{{ quiz.quiz_time if questions else "" }}{{ ":00" if questions else "" }}</h3>
 
-    <table>
+    <table id="quiz-container-table">
         <div id="quiz-container">
             <tr>
-                <td><strong>Question No:</strong> <span id="question_number">1</span></td>
+                <th>Question No: <span id="question_number">1</span></th>
             </tr>
             <tr>
                 <td id="question_statement"></td>
@@ -27,16 +27,16 @@
             </tr>
 
             <tr>
-                <td><button onclick="prevQuestion()">Previous Question</button></td>
-                <td><button onclick="nextQuestion()">Save and Next</button></td>
-                <td>
-                    <p><strong>Selected Answer:</strong> <span id="selected-option"></span></p>
-                </td>
+                <td style="display: flex; gap: 10px;"><button onclick="prevQuestion()">Previous Question</button>
+                    <button onclick="nextQuestion()">Save and Next</button>
+                    <p style="font-weight: bold;">Selected Answer: <span id="selected-option"></p></td>
+                
             </tr>
 
             <tr>
-                <td><button type="submit" id="Submit">Submit</button></td>
-                <td><a href="{{url_for('userdb')}}"><button>Cancel</button></a></td>
+                <td style="display: flex; gap: 10px;"><button type="submit" id="Submit">Submit</button>
+                    <a href="{{url_for('userdb')}}"><button>Cancel</button></a></td>
+                
             </tr>
         </div>
     </table>

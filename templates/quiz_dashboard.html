@@ -8,35 +8,37 @@
 {% block content %}
 
 <center>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <p>{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
     <div id="quizdashboard">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <p>{{ message }}</p>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
         {% for quiz in quizzes %}
         <table>
             <tr>
-
-                <td>{{ quiz.quiz_title }}</td>
-                <td><a href="{{ url_for('edit_quiz',quiz_id=quiz.quiz_id) }}"><i class="fa fa-edit"></i></a>
+                
+                <td colspan="2"><h1>{{ quiz.quiz_title }}</h1></td>
+                
+                <td>
+                    <a href="{{ url_for('edit_quiz',quiz_id=quiz.quiz_id) }}"><i class="fa fa-edit"></i></a>
                     <a href="{{ url_for('delete_quiz',quiz_id=quiz.quiz_id) }}"><i class="fa fa-trash"></i></a>
-                </td>
+                    </td>
             </tr>
 
             <tr>
-                <td>Question Id</td>
-                <td>Question Title</td>
-                <td>Action</td>
+                <th>No.</th>
+                <th style="white-space: nowrap;">Question Title</th>
+                <th>Action</th>
             </tr>
             {% set ns = namespace(question_no=0) %}
             {% for question in Question %}
             {% if question.quiz_id == quiz.quiz_id %}
             {% set ns.question_no = ns.question_no + 1 %}
             <tr>
-                <td>{{ ns.question_no }}</td>
+                <td style="text-align: center;">{{ ns.question_no }}</td>
                 <td>{{ question.ques_title }}</td>
                 <td><a href="{{ url_for('edit_question',quiz_id=quiz.quiz_id,question_id=question.ques_id) }}"><i class="fa fa-edit"></i></a>
                     <a href="{{ url_for('delete_question',question_id=question.ques_id) }}"><i class="fa fa-trash"></i></a>
@@ -46,8 +48,8 @@
             {% endif %}
             {% endfor %}
             <tr>
-                <td></td>
-                <td><a href="{{ url_for('create_question',quiz_id=quiz.quiz_id) }}"><input type="button"
+                
+                <td colspan="3" style="text-align: center;"><a href="{{ url_for('create_question',quiz_id=quiz.quiz_id) }}"><input type="button"
                             value="Add Question"></a></td>
             </tr>
            
@@ -57,7 +59,7 @@
     <div>
         <table>
             <tr>
-                <td></td>
+                
                 <td><a href="{{ url_for('create_quiz') }}"><input type="button" value="Add quiz"></a></td>
             </tr>
         </table>

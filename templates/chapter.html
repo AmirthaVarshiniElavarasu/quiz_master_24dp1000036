@@ -11,16 +11,17 @@
     <h2>{{ action }} Chapter</h2>
     <form method="POST">
         <div>
+            {% if request_path.rstrip('/') == "/Admin_Login"%}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category,message in messages %}
+            <p class="flash-message {{ category }}">{{ message }}</p>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% endif %}
             <table>
-                {% if request_path.rstrip('/') == "/admindb/create_chapter"  %}
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                {% for message in messages %}
-                <p>{{ message }}</p>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
-                {% endif %}
+               
                 <tr>
                     <td>
                         <label for="new_chap_name">Chapter Name:</label>

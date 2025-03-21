@@ -8,7 +8,6 @@
 }
 
 #index-page {
-    
     background-color: #DDEB9D;
     margin: 0;
     padding: 0;
@@ -20,24 +19,25 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: auto; /* Adjust for dynamic content */
+    height: auto;
+    /* Adjust for dynamic content */
     padding: 20px;
 }
 
 /* Table Styling */
 #index-page table {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    max-width: 500px;
+    max-width: 600px;
     margin: 20px auto;
     border-spacing: 15px;
     background-color: #A0C878;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 30px rgba(80, 120, 60, 0.5);
-    ;
+
 }
 
 /* Input Fields Styling */
@@ -48,20 +48,19 @@
 #index-page button[type="submit"],
 #index-page button {
     background-color: azure;
-    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1em;
     box-sizing: border-box;
 }
+
 #index-page input[type="text"]:hover,
 #index-page input[type="email"]:hover,
 #index-page input[type="password"]:hover,
 #index-page input[type="date"]:hover,
 #index-page button[type="submit"]:hover,
 #index-page button {
-    width: 100%;
     padding: 10px;
     border: 1px solid grey;
     border-radius: 5px;
@@ -76,7 +75,7 @@
 #index-page input[type="reset"],
 #index-page button[type="submit"],
 #index-page button[type="button"],
-#index-page button{
+#index-page button {
     width: auto;
     padding: 10px 20px;
     background-color: #27667B;
@@ -86,6 +85,7 @@
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+
 }
 
 #index-page input[type="submit"]:hover,
@@ -94,8 +94,7 @@
 #index-page input[type="reset"]:hover,
 #index-page button[type="submit"]:hover,
 #index-page button[type="button"]:hover,
-#index-page button:hover
-{
+#index-page button:hover {
     background-color: #143D60;
 }
 
@@ -115,44 +114,94 @@
 /* Gender Radio Buttons Styling */
 #index-page label {
     margin-right: 10px;
-    font-size: 1em;
+    font-size: 20px;
     color: #333;
+    font-weight: bold;
 }
 
-/* Responsive Design */
-@media (max-width: 600px) {
-    #index-page h1 {
-        font-size: 2em;
-    }
-
-    #index-page h3 {
-        font-size: 1.2em;
-    }
-
-    #index-page input[type="submit"],
-    #index-page input[type="button"],
-    #index-page button[type="submit"],
-    #index-page button[type="button"],
-    #index-page button
-    {
-        font-size: 0.9em;
-        padding: 8px 15px;
-    }
-
-    #index-page input[type="text"],
-    #index-page input[type="email"],
-    #index-page input[type="password"],
-    #index-page input[type="date"],
-    #index-page button[type="submit"],
-    #index-page button[type="button"],
-    #index-page button
-    {
-        font-size: 0.9em;
-        padding: 8px;
-    }
+#index-page th {
+    text-align: left;
+    font-size: 20px;
 }
 
-.popup-overlay{
+#index-page td {
+    width: 100%;
+    text-align: left;
+    font-size: 18px;
+
+}
+
+.description {
+    color: #555;
+    text-align: left;
+    padding: 8px;
+    min-width: 200px;
+    max-width: 100%;
+}
+
+.description-head {
+    color: #555;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-size: 25px;
+
+}
+
+#gender {
+    width: 120px;
+    height: 30px
+}
+#user-table-db{
+    padding: 20px !important;
+    max-width: 900px !important;
+    
+}
+#user-table-score td{
+    text-align: center;
+    padding: 8px;
+    min-width: 130px;
+    
+
+}
+
+#user-table-db th,#user-table-score th{
+    text-align: center;
+   
+    
+}
+
+
+#user-table-db td{
+    text-align: center;
+    padding: 8px;
+    min-width: 100px;
+}
+
+#quiz-container-table{
+    max-width: 900px !important; 
+}
+#quiz-container-table th{
+    font-size: 30px;
+}  
+
+#question_statement{
+    width: 100%;
+}
+
+#time {
+    height: 50px;
+    width: 80px;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center; 
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    border: 3px solid #333; 
+    color: #333; 
+}
+.popup-overlay {
     display: none;
     background-color: black;
     opacity: 0.8;
@@ -164,48 +213,116 @@
     z-index: 1;
 }
 
-.popup-box{
+.popup-box {
     display: none;
     background-color: white;
-    width: 40%;
+    width: 50%;
     padding: 40px;
     border-radius: 10px;
     position: absolute;
-    top: 20%;
-    left: 20%;
+    top: 25%;
+    left: 25%;
     z-index: 2;
 }
 
 /* Edit and delete button of subject/chapter/quiz/questions */
 
-.fa-edit{
+.fa-edit {
     color: #27667B;
     font-size: 18px;
     transition: color 0.3s ease-in-out;
 }
-.fa-trash{
+
+.fa-trash {
     color: #D9534F;
     font-size: 18px;
     transition: color 0.3s ease-in-out;
 }
-.fa-edit :hover{
+
+.fa-edit :hover {
     color: #143D60;
 }
-.fa-trash :hover{
+
+.fa-trash :hover {
     color: #A94442;
 }
 
 
 /* Table arrangement */
 
-table {
-   display: flex;
-   flex-wrap: wrap;
-   gap:20px;
-   justify-content: flex-start;
+#adminsub,
+#quizdashboard {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
 }
-@media (max-width: 768px) {
-    table-wrapper {
-        flex-direction: column; /* Stack tables on smaller screens */
-    }
+
+#admin_users {
+    width: 100%;
+    max-width: 1200px;
+    border-collapse: collapse;
+}
+
+/* Style the header row */
+#admin_users th {
+    background-color: #DDEB9D;
+    color: #333;
+    font-weight: bold;
+    font-size: 20px;
+    padding: 12px;
+    text-align: center;
+    border: 2px solid black;
+
+}
+
+/* Style table rows */
+#admin_users td {
+    width: 300px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid black;
+}
+
+/* Optional: Hover effect */
+#admin_users tr:hover {
+    background-color: #f9f9f9;
+}
+
+
+/* flash messages */
+.flash-message {
+    padding: 10px;
+    border-radius: 5px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.success {
+    background-color: #e6ffe6;
+    color: green;
+    font-weight: bold;
+    border: 1px solid green;
+}
+
+.error {
+    background-color: #ffe6e6;
+    color: red;
+    font-weight: bold;
+    border: 1px solid red;
+}
+
+/* charts */
+.chart-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 70vh;
+}
+
+.chart-container div {
+    flex: 1;
+    max-width: 600px;
+    height: 100%;
 }

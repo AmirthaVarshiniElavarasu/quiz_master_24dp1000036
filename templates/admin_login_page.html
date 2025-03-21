@@ -10,32 +10,33 @@
         <h1>Welcome to Quiz Master</h1>
         <h3>Admin Log in Page</h3>
         <form method="POST" action="{{ url_for('Admin_Login') }}">
+            {% if request_path.rstrip('/') == "/Admin_Login"%}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category,message in messages %}
+            <p class="flash-message {{ category }}">{{ message }}</p>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% endif %}
             <table>
-                <tr>
-                    {% if request_path.rstrip('/') == "/Admin_Login" %}
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    {% for message in messages %}
-                    <p>{{ message }}</p>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-                    {% endif %}
-                </tr>
                 <tr>
                     <td><label for="admin_email">Username:</label></td>
                     <td><input type="email" placeholder="Email-ID" id="admin_email" name="admin_email" required></td>
+                    
                 </tr>
                 <tr>
                     <td><label for="admin_password">Password:</label></td>
                     <td><input type="password" placeholder="Enter your password" id="admin_password" name="admin_password" required></td>
+                    
                 </tr>
                 <tr>
                     <td><input type="submit" value="Log in"></td>
-                </tr>
-                <tr>
                     <td><a href="{{ url_for('Login') }}"><input type="button" value="User Login"></a></td>
+                    
+
                 </tr>
+
             </table>
         </form>
 

@@ -7,33 +7,35 @@
 
 {% block content %}
 <center>
+    {% if request_path.rstrip('/') in ["/admindb","/Admin_Login"] %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+    {% for category,message in messages %}
+    <p class="flash-message {{ category }}">{{ message }}</p>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+    {% endif %}
     <div id="adminsub">
-        {% if request_path.rstrip('/') == "/admindb" %}
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        {% for message in messages %}
-        <p>{{ message }}</p>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-        {% endif %}
 
         {% for subject in Subjects %}
-        <table >
-           
+        <table>
+
             <tr>
 
                 <td>
                     <h1>{{ subject.sub_name }}</h1>
                 </td>
-                <td><a href="{{ url_for('edit_subject',sub_id=subject.sub_id) }}" class="icon-button edit-btn"><i class="fa fa-edit"></a></td>
-                <td><a href="{{ url_for('delete_subject',sub_id=subject.sub_id) }}" class="icon-button delete-btn"><i class="fa fa-trash"></i></a></td>
+                <td><a href="{{ url_for('edit_subject',sub_id=subject.sub_id) }}" class="icon-button edit-btn"><i
+                            class="fa fa-edit"></a></td>
+                <td><a href="{{ url_for('delete_subject',sub_id=subject.sub_id) }}" class="icon-button delete-btn"><i
+                            class="fa fa-trash"></i></a></td>
             </tr>
 
             <tr>
-                <td>Chapters</td>
-                <td>No.of Quiz</td>
-                <td>action</td>
+                <th>Chapters</th>
+                <th>No.of Quiz</th>
+                <th>action</th>
             </tr>
 
             {% for chapter in Chapters %}
@@ -51,28 +53,31 @@
             </tr>
             {% endif %}
             {% endfor %}
-            
+
             <tr>
-                 
-                <td >
+
+                <td>
                     <a href="{{ url_for('create_chapter',sub_id=subject.sub_id) }}">
                         <input type="button" value="Add Chapter">
                     </a>
                 </td>
-                            
+
             </tr>
             <tr>
-                <td ><button onclick="Description('description-{{subject.sub_id}}')">Description</button></td>
+                <td><button onclick="Description('description-{{subject.sub_id}}')">Description</button></td>
             </tr>
 
             <tr class="description-{{ subject.sub_id }}" style="display: none;">
-                <td>Subject Description</td>
-                <td >{{ subject.sub_Description }}</td>
+                <td class="description-head">Subject Description:</td>
+                <td colspan="2" class="description">{{ subject.sub_Description }}</td>
+                <td></td>
+                
             </tr>
             <tr class="description-{{ subject.sub_id }}" style="display: none;">
-                <td>Quiz Description</td>
-                <td >{{ subject.sub_quiz_descrip }}</td>
-        </tr>
+                <td class="description-head">Quiz Description:</td>
+                <td colspan="2" class="description">{{ subject.sub_quiz_descrip }}</td>
+                <td></td>
+            </tr>
         </table>
         {% endfor %}
 

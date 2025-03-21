@@ -8,14 +8,12 @@
 {% block content %}
 <center>
     <h2> Quiz Scores</h2>
-    <table>
-      
-        <div>
+    <table id="user-table-score">
             <tr>
-            <td>Quiz Id</td>
-            <td>No.of Questions</td>
-            <td>Date</td>
-            <td>Score</td>
+            <th>Quiz Id</th>
+            <th>No.of Questions</th>
+            <th>Date</th>
+            <th>Score</th>
             </tr>
             {% for  score in  scores %}
             <tr>
@@ -25,7 +23,7 @@
             <td>{{score.score_total}}</td>
             </tr>
             {% endfor %}
-        </div>
+
     </table>
 </center>
 {% endblock %}

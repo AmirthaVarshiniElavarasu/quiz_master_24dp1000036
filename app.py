@@ -112,7 +112,7 @@ def registration():
         hased_password=bcrypt.generate_password_hash(password).decode('utf-8')
 
         if User.query.filter_by(email=email).first():
-            flash("User already exists!", "error") 
+            flash("User Already Exists!", "error") 
             return redirect(url_for('registration'))
         else:
             new_user=User(email=email,password=hased_password,username=username,qualification=qualification,gender=gender,dob=dob_1)
@@ -120,7 +120,7 @@ def registration():
             data.session.commit()
             # Process the data
             # Store it in the database
-            flash('Registration successful!')
+            flash('Registration Successful!',"success")
             return redirect(url_for('Login'))
 
     return render_template('registration.html',request_path=request.path)
@@ -136,24 +136,23 @@ def Login():
        
         if not user:
             
-            flash('User not found.')
+            flash('User Not Found.','error')
             return render_template('loginpage.html',request_path=request.path)
 
         if bcrypt.check_password_hash(user.password, password):
             session['user'] = user.id
             session['name'] = user.username
-            flash('Login successful.')
+            flash('Login Successful.','success')
             return redirect(url_for('userdb'))
         else:
-            print("Password mismatch")
-            flash('Invalid email or password.')
+            flash('Invalid Email or Password.','error')
             
     return render_template('loginpage.html',request_path=request.path)
 
 @application.route('/Logout')
 def Logout():
     session.pop('user',None)
-    flash('you have been logged out.')
+    flash('You Have Been Logged Out.','success')
     return redirect(url_for('Login',request_path=request.path))
 
 @application.route('/Admin_Login', methods=['GET', 'POST'])
@@ -165,28 +164,27 @@ def Admin_Login():
         user_admin = Admin.query.filter_by(admin_email=admin_email).first()
         
         if not user_admin:
-            flash('User not found.')
+            flash('User not found.','error')
             return render_template('admin_login_page.html')
 
         if bcrypt.check_password_hash(user_admin.admin_password, admin_password):
             session['admin'] = user_admin.admin_id
-            flash('Admin Login successful.')
+            flash('Admin Login Successful.','success')
             return redirect(url_for('admindb'))
         else:
-            print("Password mismatch")
-            flash('Invalid email or password.')
+            flash('Invalid Email or Password.','error')
     return render_template('admin_login_page.html',request_path=request.path)
 
 @application.route('/Admin_Logout',methods=['GET'])
 def Admin_Logout():
     session.pop('admin',None)
-    flash('you have been logged out.')
+    flash('You Have Been Logged Out.','success')
     return redirect(url_for('Admin_Login',request_path=request.path))
 
 @application.route('/admindb',methods=['GET','POST'])
 def admindb():
     if 'admin' not in session:
-        flash('please login')
+        flash('Please Login','error')
         return redirect(url_for('Admin_Login'))
     
     Subjects=Subject.query.all()
@@ -198,7 +196,7 @@ def admindb():
 @application.route('/admindb/quiz_dashboard/')
 def quiz_dashboard():
     if 'admin' not in session:
-        flash('please login')
+        flash('Please Login','error')
         return redirect(url_for('Admin_Login'))
     
     Quizzes=Quiz.query.all()
@@ -211,8 +209,8 @@ def quiz_dashboard():
 @application.route('/admindb/summary_dashboard')
 def summary_dashboard():
     if 'admin' not in session:
-        flash('Please Login to create a subject')
-        return redirect("url_for('Admin_Login')")
+        flash('Please Login To See Summary','error')
+        return redirect(url_for('Admin_Login'))
     
     users=User.query.all()
     Total_score=Scores.query.all()
@@ -240,7 +238,7 @@ def summary_dashboard():
 @application.route('/userdb',methods=['GET','POST'])
 def userdb():
     if 'name' not in session:
-        flash('please login')
+        flash('Please Login','error')
         return redirect(url_for('Login'))
     
     quiz=Quiz.query.all()
@@ -342,7 +340,7 @@ def search():
 @application.route('/scores',methods=['GET','POST'])
 def scores():
     if 'name' not in session:
-        flash('please login')
+        flash('Please Login','error')
         return redirect(url_for('Login'))
     
     user_id=session['user']
@@ -353,7 +351,7 @@ def scores():
 @application.route('/userdb/user_summary/<int:user_id>',methods=['GET','POST'])
 def user_summary(user_id):
     if 'name' not in session:
-        flash('please login')
+        flash('Please Login','error')
         return redirect(url_for('Login'))
     
     subject_scores=get_no_of_subject_by_quiz(user_id)
@@ -380,7 +378,7 @@ def user_summary(user_id):
 @application.route('/userdb/user_view_quiz/<int:quiz_id>',methods=['GET','POST'])
 def user_view_quiz(quiz_id):
     if 'name' not in session:
-        flash('please login')
+        flash('Please Login','error')
         return redirect(url_for('Login'))
     
     quiz=Quiz.query.get_or_404(quiz_id)
@@ -392,7 +390,7 @@ def user_view_quiz(quiz_id):
 @application.route('/userdb/user_start_quiz/<int:quiz_id>',methods=['GET','POST'])
 def user_start_quiz(quiz_id):
     if 'name' not in session:
-        flash('please login')
+        flash('Please Login','error')
         return redirect(url_for('Login'))
     
     quiz=Quiz.query.get_or_404(quiz_id)
@@ -429,15 +427,14 @@ def user_start_quiz(quiz_id):
 @application.route('/admindb/create_subject', methods=['GET', 'POST'])
 def create_subject():
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Create A Subject','success')
         return redirect(url_for('Admin_Login'))
 
     if request.method == 'POST':
         sub_name = request.form.get('new_sub_name')
-        
        
         if Subject.query.filter_by(sub_name=sub_name).first():  
-            flash('This subject already exists.')
+            flash('This Subject Already Exists.','error')
             return render_template('subject.html', action="Creation")
 
         sub_description = request.form.get('new_sub_descrip')
@@ -448,12 +445,9 @@ def create_subject():
         data.session.add(new_sub)
         data.session.commit()
 
-        flash(f"{sub_name} Created Successfully")
+        flash(f"Subject {sub_name} Created Successfully",'success')
         return redirect(url_for('admindb'))
 
-    else:
-        flash("Something went wrong")
-        return render_template('subject.html', action="Creation")
 
     return render_template('subject.html', action="Create",request_path=request.path)
 
@@ -461,7 +455,7 @@ def create_subject():
 @application.route('/admindb/edit_subject/<int:sub_id>',methods=['GET','POST'])
 def edit_subject(sub_id):
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Edit A Subject','error')
         return redirect("url_for('Admin_Login')")
 
     subject=Subject.query.get_or_404(sub_id)
@@ -470,30 +464,30 @@ def edit_subject(sub_id):
         subject.sub_Description=request.form.get('new_sub_descrip')
         subject.sub_quiz_descrip=request.form.get('new_sub_quiz_descrip')
         data.session.commit()
-        flash(f"{ subject.sub_name } Edited Successfully")
+        flash(f"Subject { subject.sub_name } Edited Successfully",'success')
         return redirect(url_for('admindb'))
     return render_template('subject.html',action="Edit",subject=subject,request_path=request.path)
 
 @application.route('/admindb/delete_subject/<int:sub_id>',methods=['GET','POST'])
 def delete_subject(sub_id):
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Delete A Subject','error')
         return redirect("url_for('Admin_Login')")
     
     subject=Subject.query.get_or_404(sub_id)
     if subject.sub_chap:
-        flash("please delete the chapter")
+        flash("Please Delete The Chapter",'error')
         return redirect(url_for('admindb'))
     data.session.delete(subject)
     data.session.commit()
-    flash(f"{ subject.sub_name } deleted Successfully")
+    flash(f"Subject { subject.sub_name } deleted Successfully",'success')
     
     return redirect(url_for('admindb',request_path=request.path))
 
 @application.route('/admindb/create_chapter/<int:sub_id>',methods=['GET', 'POST'])
 def create_chapter(sub_id):
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Create A Subject','error')
         return redirect(url_for('Admin_Login'))
     subject = Subject.query.get_or_404(sub_id) 
 
@@ -502,14 +496,14 @@ def create_chapter(sub_id):
         chap_description = request.form.get('new_chap_descrip')
 
         if Chapter.query.filter_by(chap_title=chap_title).first():  
-            flash('This chapter already exists.')
+            flash('This Chapter Already Exists.','success')
             return render_template('chapter.html', action="Creation",sub_id=subject.sub_id)
         
         new_chap = Chapter(chap_title=chap_title, chap_description=chap_description,sub_id=subject.sub_id)
         data.session.add(new_chap)
         data.session.commit()
 
-        flash(f"{chap_title} Created Successfully")
+        flash(f"Chapter {chap_title} Created Successfully",'success')
         return redirect(url_for('admindb'))
 
     return render_template('chapter.html', action="Create",request_path=request.path)
@@ -518,7 +512,7 @@ def create_chapter(sub_id):
 @application.route('/admindb/edit_chapter/<int:chap_id>,<int:sub_id>',methods=['GET','POST'])
 def edit_chapter(chap_id,sub_id):
     if 'admin' not in session:
-        flash('Please Login to create a chapter')
+        flash('Please Login To Edit A Chapter','error')
         return redirect("url_for('Admin_Login')")
 
     chapter=Chapter.query.get_or_404(chap_id,sub_id)
@@ -528,33 +522,33 @@ def edit_chapter(chap_id,sub_id):
         chapter.chap_description=request.form.get('new_chap_descrip')
         chapter.sub_id=sub_id
         data.session.commit()
-        flash(f"{ chapter.chap_title } Edited Successfully")
+        flash(f"Chapter { chapter.chap_title } Edited Successfully",'success')
         return redirect(url_for('admindb'))
     return render_template('chapter.html',action="Edit",chapter=chapter,request_path=request.path)
 
 @application.route('/admindb/delete_chapter/<int:chap_id>,<int:sub_id>',methods=['GET','POST'])
 def delete_chapter(chap_id,sub_id):
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Delete A Chapter','error')
         return redirect("url_for('Admin_Login')")
     
     chapter=Chapter.query.get_or_404(chap_id,sub_id)
     if chapter.chap_quiz:
-        flash("please delete the Quizzes")
-        return redirect("url_for('admindb')")
+        flash("Please Delete The Quizzes",'error')
+        return redirect(url_for('admindb'))
     data.session.delete(chapter)
     data.session.commit()
-    flash(f"{chapter.chap_title} deleted")
+    flash(f"Chapter {chapter.chap_title} Deleted",'success')
     return redirect(url_for('admindb'))
 
 @application.route('/admindb/quiz_dashboard/create_quiz',methods=['GET','POST'])
 def create_quiz():
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Create A Quiz','error')
         return redirect(url_for('Admin_Login'))
     
     if Chapter.query.first() == None:
-        flash("Please Create Chapter")
+        flash("Please Create Chapter",'error')
         return redirect(url_for('admindb'))
     
     chapters=Chapter.query.all()
@@ -582,7 +576,7 @@ def create_quiz():
         data.session.add(new_quiz)
         data.session.commit()
 
-        flash(f"{quiz_title} Created Successfully")
+        flash(f"{quiz_title} Created Successfully",'success')
         return redirect(url_for('quiz_dashboard'))
     
     return render_template('quiz_creation.html',chapters=chapters,action='Create',quiz_title=quiz_title,request_path=request.path)
@@ -590,7 +584,7 @@ def create_quiz():
 @application.route('/admindb/quiz_dashboard/edit_quiz/<int:quiz_id>',methods=['GET','POST'])
 def edit_quiz(quiz_id):
     if 'admin' not in session:
-        flash('Please Login to create a chapter')
+        flash('Please Login To Edit A Quiz','error')
         return redirect("url_for('Admin_Login')")
 
     quiz=Quiz.query.get_or_404(quiz_id)
@@ -608,19 +602,19 @@ def edit_quiz(quiz_id):
         quiz.quiz_time=(hours*60)+minutes
         
         data.session.commit()
-        flash(f"{ quiz.quiz_title } Edited Successfully")
+        flash(f"{ quiz.quiz_title } Edited Successfully",'success')
         return redirect(url_for('quiz_dashboard'))
     return render_template('quiz_creation.html',action="Edit",chapters=chapters,quiz_title=quiz.quiz_title,quiz=quiz,request_path=request.path)
 
 @application.route('/admindb/quiz_dashboard/delete_quiz/<int:quiz_id>',methods=['GET','POST'])
 def delete_quiz(quiz_id):
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Delete A Quiz','error')
         return redirect("url_for('Admin_Login')")
     
     quiz=Quiz.query.get_or_404(quiz_id)
     if quiz.quiz_ques:
-        flash("please delete the Questions")
+        flash("Please Delete The Questions",'error')
         return redirect(url_for('quiz_dashboard'))
     data.session.delete(quiz)
     data.session.commit()
@@ -631,7 +625,7 @@ def delete_quiz(quiz_id):
 def create_question(quiz_id):
     quiz=Quiz.query.get_or_404(quiz_id)
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Create A Question','error')
         return redirect(url_for('Admin_Login'))
     
     if request.method=="POST":
@@ -650,15 +644,14 @@ def create_question(quiz_id):
             data.session.add(new_option)
 
         data.session.commit()
-        flash(f"{ ques_title } Created Successfully")
-
+        flash(f"{ ques_title } Created Successfully",'success')
 
     return render_template('question.html',action='Create',quiz=quiz,request_path=request.path)
 
 @application.route('/admindb/quiz_dashboard/edit_question/<int:quiz_id>,<int:question_id>',methods=['GET','POST'])
 def edit_question(quiz_id,question_id):
     if 'admin' not in session:
-        flash('Please Login to create a chapter')
+        flash('Please Login To Edit A Question','error')
         return redirect("url_for('Admin_Login')")
     
     quiz=Quiz.query.get_or_404(quiz_id)
@@ -689,29 +682,24 @@ def edit_question(quiz_id,question_id):
                 new_option = Option(op_statement=text, op_ques_id=question.ques_id)
                 data.session.add(new_option)
 
-
         data.session.commit()       
                 
-
-        flash(f"{ quiz.quiz_title } Edited Successfully")
+        flash(f"{ quiz.quiz_title } Edited Successfully",'success')
         return redirect(url_for('quiz_dashboard'))
     return render_template('Edit_question.html',action="Edit",quiz=quiz,question=question,request_path=request.path)
 
 @application.route('/admindb/quiz_dashboard/delete_question/<int:question_id>',methods=['GET','POST'])
 def delete_question(question_id):
     if 'admin' not in session:
-        flash('Please Login to create a subject')
+        flash('Please Login To Delete A Question','error')
         return redirect("url_for('Admin_Login')")
     
     question=Questions.query.get_or_404(question_id)
     
     data.session.delete(question)
     data.session.commit()
-    flash(f"{question.ques_title} deleted")
+    flash(f"{question.ques_title} Deleted Successfully",'success')
     return redirect(url_for('quiz_dashboard'))
-
-
-
 
 with application.app_context():
     setup_database()

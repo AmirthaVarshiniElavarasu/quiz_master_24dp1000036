@@ -63,6 +63,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     labels: barXSubjects,
                     datasets: [{
                         backgroundColor: barColors,
+                        borderColor: 'black',
+                        borderWidth: 0.5,
                         data: barYScores
                     }]
                 },
@@ -70,8 +72,45 @@ document.addEventListener("DOMContentLoaded", function () {
                     plugins: {
                         title: {
                             display: true,
-                            text: "Subject wise top scores"
+                            text: "Subject wise top scores",
+                            color: '#333',
+                            font: {
+                                size: 20,
+                                weight: 'bold',
+                                family: 'timenewroman'
+
+                            },
                         }, legend: { display: false }
+                    },
+                    scale: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 15,
+                                    weight: "bold"
+                                }
+
+                            },
+                            grid: {
+                                lineWidth: 2,
+                                color: "rgba(0, 0, 0, 0)"
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 15,
+                                    weight: "bold"
+                                }
+
+                            },
+                            grid: {
+                                lineWidth: 2,
+                                color: "rgba(0, 0, 0, 0)"
+                            }
+                        }
+
+
                     },
                     responsive: true,
                     maintainAspectRatio: false
@@ -85,19 +124,31 @@ document.addEventListener("DOMContentLoaded", function () {
                     labels: pieXSubjects,
                     datasets: [{
                         backgroundColor: pieColors,
-                        data: pieYScores
-                    }]
+                        borderColor: 'black',
+                        borderWidth: 0.5,
+                        data: pieYScores,
+                    }],
+                    // 
                 },
 
                 options: {
                     plugins: {
                         title: {
                             display: true,
-                            text: "Subject wise user attempts"
+                            text: "Subject wise user attempts",
+                            color: '#333',
+                            font: {
+                                size: 20,
+                                weight: 'bold',
+                                family: 'timenewroman'
+
+                            },
+
                         },
-                        legend: { display: false }
-                    }, 
-                    responsive: true, 
+                        legend: { display: true }
+                    },
+
+                    responsive: true,
                     maintainAspectRatio: false
                 }
             });
@@ -133,6 +184,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     labels: user_barXSubjects,
                     datasets: [{
                         backgroundColor: user_barColors,
+                        borderColor: 'black',
+                        borderWidth: 0.5,
                         data: user_barYScores
                     }]
                 },
@@ -140,8 +193,45 @@ document.addEventListener("DOMContentLoaded", function () {
                     plugins: {
                         title: {
                             display: true,
-                            text: "Subject wise no. of quizzes attempted"
+                            text: "Subject wise no. of quizzes attempted",
+                            color: '#333',
+                            font: {
+                                size: 20,
+                                weight: 'bold',
+                                family: 'timenewroman'
+
+                            },
                         }, legend: { display: false }
+                    },
+                    scale: {
+                        x: {
+                            ticks: {
+                                font: {
+                                    size: 15,
+                                    weight: "bold"
+                                }
+
+                            },
+                            grid: {
+                                lineWidth: 2,
+                                color: "rgba(0, 0, 0, 0)"
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                font: {
+                                    size: 15,
+                                    weight: "bold"
+                                }
+
+                            },
+                            grid: {
+                                lineWidth: 2,
+                                color: "rgba(0, 0, 0, 0)"
+                            }
+                        }
+
+
                     },
 
                     responsive: true,
@@ -155,6 +245,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     labels: user_pieXSubjects,
                     datasets: [{
                         backgroundColor: user_pieColors,
+                        borderColor: 'black',
+                        borderWidth: 0.5,
                         data: user_pieYScores
                     }]
                 },
@@ -162,8 +254,16 @@ document.addEventListener("DOMContentLoaded", function () {
                     plugins: {
                         title: {
                             display: true,
-                            text: "Month wise no. of quizzes attempted"
-                        }
+                            text: "Month wise no. of quizzes attempted",
+                            color: '#333',
+                            font: {
+                                size: 20,
+                                weight: 'bold',
+                                family: 'timenewroman'
+
+                            },
+                        },
+                        legend: { display: true }
                     },
                     responsive: true,
                     maintainAspectRatio: false
@@ -411,7 +511,7 @@ function search() {
                     resultsDiv.innerHTML += `<p> Scores Id: ${score.score_id} - Quiz_Id: ${score.Quiz_Id} -  Total Score: ${score.Total_Score}</p>`;
                 });
             }
-           
+
         })
         .catch(error => {
             console.error("Search error", error);

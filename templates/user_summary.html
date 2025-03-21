@@ -18,11 +18,11 @@
         data-pie-y-user-att='{{ pie_y_user_att | tojson | safe }}' data-pie-colors='{{ pie_Colors | tojson | safe }}'>
     </div>
     
-    <div style="display: flex; justify-content: space-around; align-items: center; width: 100%; height: 70vh;">
-        <div style="flex: 1; max-width: 600px; height: 100%;">
+    <div class="chart-container">
+        <div >
             <canvas id="UserBarChart"></canvas>
         </div>
-        <div style="flex: 1; max-width: 600px; height: 100%;">
+        <div >
             <canvas id="UserPieChart"></canvas>
         </div>
     </div>

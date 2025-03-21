@@ -9,25 +9,25 @@
 <center>
 
     <div id="userdashboard">
+        {% if request_path.rstrip('/') in ["/userdb","/Login"] %}
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        {% for category,message in messages %}
+        <p class="flash-message {{ category }}">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% endif %}
 
-        <table>
-             {% if request_path.rstrip('/') == "/userdb" %}
-             {% with messages = get_flashed_messages() %}
-             {% if messages %}
-             {% for message in messages %}
-             <p>{{ message }}</p>
-             {% endfor %}
-             {% endif %}
-             {% endwith %}
-             {% endif %}
+        <table id="user-table-db">
             <h1>Upcoming Quizzes</h1>
             <tr>
-                <td>ID</td>
-                <td>Quiz Title</td>
-                <td>No. of Questions</td>
-                <td>Date</td>
-                <td>Duration</td>
-                <td>Action</td>
+                <th>ID</th>
+                <th>Quiz Title</th>
+                <th>No. of Questions</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>Action</th>
 
             </tr>
             {% for q in quiz %}
@@ -35,12 +35,14 @@
                 <td>{{ q.quiz_id }}</td>
                 <td>{{ q.quiz_title }}</td>
                 <td>{{ q.question }}</td>
-                <td>{{q.quiz_date}}</td>
+                <td>{{q.quiz_date.strftime('%d-%m-%y')}}</td>
                 <td>{{q.quiz_time}} Minutes</td>
-                <td><a href="{{ url_for('user_view_quiz',quiz_id=q.quiz_id)}}"><button id="viewquiz">View</button></a>
-                <td>
-                    <a href="{{ url_for('user_start_quiz', quiz_id=q.quiz_id) }}"><button id="startquiz">Start</button></a>
-                </td>
+                <td style="display: flex; gap: 10px;"><a href="{{ url_for('user_view_quiz',quiz_id=q.quiz_id)}}"><button
+                            id="viewquiz">View</button></a>
+
+                    <a href="{{ url_for('user_start_quiz', quiz_id=q.quiz_id) }}"><button
+                            id="startquiz">Start</button></a>
+
                 </td>
             </tr>
 

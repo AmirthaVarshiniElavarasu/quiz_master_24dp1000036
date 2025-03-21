@@ -9,26 +9,28 @@
         <h1>Welcome to Quiz Master</h1>
         <h3>Log in Page</h3>
         <form method="POST">
+            {% if request_path.rstrip('/') in ["/registration","/Login","/Logout"] %}
+            {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+            {% for category,message in messages %}
+            <p class="flash-message {{ category }}">{{ message }}</p>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% endif %}
+
             <table>
                 <tr>
-                    {% if request_path.rstrip('/') == "/Login" %}
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    {% for message in messages %}
-                    <p>{{ message }}</p>
-                    {% endfor %}
-                    {% endif %}
-                    {% endwith %}
-                    {% endif %}
+                    <td><label for="email" class="Username-login">Username:</label></td>
+                    <td colspan="2"><input type="email" placeholder="Email-ID" id="email" name="email" required></td>
+
                 </tr>
                 <tr>
-                    <td><label for="email">Username:</label></td>
-                    <td><input type="email" placeholder="Email-ID" id="email" name="email" required></td>
-                </tr>
-                <tr>
-                    <td><label for="password">Password:</label></td>
-                    <td><input type="password" placeholder="Enter your password" id="password" name="password" required>
+                    <td><label for="password" class="password-login">Password:</label></td>
+                    <td colspan="2"><input type="password" placeholder="Enter your password" id="password"
+                            name="password" required>
                     </td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td><input type="submit" value="Log in"></td>

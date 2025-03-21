@@ -6,33 +6,36 @@
     <h1>Welcome to Quiz Master</h1>
     <h3>Registration Page</h3>
     <form method="POST" action="{{ url_for('registration') }}">
+        {% if request_path.rstrip('/') == "/registration"%}
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        {% for category,message in messages %}
+        <p class="flash-message {{ category }}">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% endif %}
+        
         <table>
             <tr>
-                {% if request_path.rstrip('/') == "/registration" %}
-                {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                {% for message in messages %}
-                <p>{{ message }}</p>
-                {% endfor %}
-                {% endif %}
-                {% endwith %}
-                {% endif %}
-            </tr>
-            <tr>
                 <td><label for="email">Username (Email):</label></td>
-                <td><input type="email" id="email" name="email" placeholder="Enter your email-ID" required></td>
+                <td colspan="2"><input type="email" id="email" name="email" placeholder="Enter your email-ID" required></td>
+                
             </tr>
             <tr>
                 <td><label for="password">Password:</label></td>
-                <td><input type="password" id="password" name="password" placeholder="Create a password" required></td>
+                <td colspan="2"><input type="password" id="password" name="password" placeholder="Create a password" required></td>
+                
             </tr>
             <tr>
                 <td><label for="username">Name:</label></td>
-                <td><input type="text" id="username" name="username" placeholder="Enter your name" required></td>
+                <td colspan="2"><input type="text" id="username" name="username" placeholder="Enter your name" required></td>
+                
             </tr>
             <tr>
                 <td><label for="qualification">Qualification:</label></td>
-                <td><input type="text" id="qualification" name="qualification" placeholder="Enter your qualification" required></td>
+                <td colspan="2"><input type="text" id="qualification" name="qualification" placeholder="Enter your qualification" required></td>
+                
             </tr>
             <tr>
                 <td><label for="gender">Gender:</label></td>

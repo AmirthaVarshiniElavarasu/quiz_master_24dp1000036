@@ -7,16 +7,13 @@
 
 {% block content %}
 <center>
-    <div>
-
-    </div>
-
-    <div id="admin_users">
-        <table>
+    
+    <div >
+        <table id="admin_users">
             <tr>
-                <td> User Id </td>
-                <td> User Name </td>
-                <td> Average Score </td>
+                <th> User Id </th>
+                <th> User Name </th>
+                <th> Average Score </th>
             </tr>
             {% for user in users %}
             <tr>
@@ -45,11 +42,11 @@
         data-pie-y-scores='{{ pie_y_scores | tojson | safe }}' data-pie-colors='{{ pie_Colors | tojson | safe }}'>
     </div>
     
-    <div style="display: flex; justify-content: space-around; align-items: center; width: 100%; height: 70vh;">
-        <div style="flex: 1; max-width: 600px; height: 100%;">
+    <div class="chart-container">
+        <div >
             <canvas id="barChart"></canvas>
         </div>
-        <div style="flex: 1; max-width: 600px; height: 100%;">
+        <div >
             <canvas id="pieChart"></canvas>
         </div>
     </div>
