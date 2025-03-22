@@ -32,8 +32,6 @@ class Chapter(data.Model):
     chap_quiz=data.relationship('Quiz',backref='Chapter',lazy=True)
     sub_id=data.Column(data.Integer,data.ForeignKey('sub.sub_id'),nullable=False)
 
-    
-
 class Quiz(data.Model):
     __tablename__='quizzes'
     quiz_id=data.Column(data.Integer,primary_key=True)
