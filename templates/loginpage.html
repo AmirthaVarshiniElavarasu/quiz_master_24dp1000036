@@ -9,7 +9,7 @@
         <h1>Welcome to Quiz Master</h1>
         <h3>Log in Page</h3>
         <form method="POST">
-            {% if request_path.rstrip('/') in ["/registration","/Login","/Logout"] %}
+            {% if request_path.rstrip('/') in ["/registration","/Login","/Logout","/userdb","/scores"] or request_path.startswith('/userdb/user_summary/') or request_path.startswith('/userdb/user_view_quiz/') or request_path.startswith('/userdb/user_start_quiz/') %}
             {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
             {% for category,message in messages %}

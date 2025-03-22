@@ -204,8 +204,6 @@ def quiz_dashboard():
 
     return render_template('quiz_dashboard.html',quizzes=Quizzes,Question=Question,user="Admin",request_path=request.path)
 
-
-   
 @application.route('/admindb/summary_dashboard')
 def summary_dashboard():
     if 'admin' not in session:
@@ -242,8 +240,10 @@ def userdb():
         return redirect(url_for('Login'))
     
     quiz=Quiz.query.all()
+    chapter=Chapter.query.all()
+    subject=Subject.query.all()
     
-    return render_template('User_Dashboard.html',quiz=quiz,request_path=request.path)
+    return render_template('User_Dashboard.html',quiz=quiz,subject=subject,chapter=chapter,request_path=request.path)
 
 @application.route('/search',methods=['GET'])
 def search():
@@ -396,7 +396,6 @@ def user_start_quiz(quiz_id):
     quiz=Quiz.query.get_or_404(quiz_id)
     question=Questions.query.filter_by(quiz_id=quiz_id).all()
     
-
     correctAnswer={str(i.ques_id) : i.correct_option  for i in question }
     total=0
     
@@ -440,14 +439,12 @@ def create_subject():
         sub_description = request.form.get('new_sub_descrip')
         sub_quiz_descrip = request.form.get('new_sub_quiz_descrip')
 
-     
         new_sub = Subject(sub_name=sub_name, sub_Description=sub_description, sub_quiz_descrip=sub_quiz_descrip)
         data.session.add(new_sub)
         data.session.commit()
 
         flash(f"Subject {sub_name} Created Successfully",'success')
         return redirect(url_for('admindb'))
-
 
     return render_template('subject.html', action="Create",request_path=request.path)
 
@@ -472,7 +469,7 @@ def edit_subject(sub_id):
 def delete_subject(sub_id):
     if 'admin' not in session:
         flash('Please Login To Delete A Subject','error')
-        return redirect("url_for('Admin_Login')")
+        return redirect(url_for('Admin_Login'))
     
     subject=Subject.query.get_or_404(sub_id)
     if subject.sub_chap:
@@ -552,7 +549,6 @@ def create_quiz():
         return redirect(url_for('admindb'))
     
     chapters=Chapter.query.all()
-
 
     latest_quiz=Quiz.query.order_by(Quiz.quiz_id.desc()).first()
     

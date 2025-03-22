@@ -8,13 +8,19 @@
 {% block content %}
 
 <center>
-    {% with messages = get_flashed_messages() %}
+    {% if request_path.rstrip('/') in ['/admindb/quiz_dashboard/create_quiz'] or 
+    request_path.startswith('/admindb/quiz_dashboard/edit_quiz/') or 
+    request_path.startswith('/admindb/quiz_dashboard/delete_quiz/') or 
+    request_path.startswith('/admindb/quiz_dashboard/edit_question/') or 
+    request_path.startswith('/admindb/quiz_dashboard/delete_question/')%}
+    {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
-    {% for message in messages %}
-    <p>{{ message }}</p>
+    {% for category,message in messages %}
+    <p class="flash-message {{ category }}">{{ message }}</p>
     {% endfor %}
     {% endif %}
     {% endwith %}
+    {% endif %}
     <div id="quizdashboard">
         {% for quiz in quizzes %}
         <table>

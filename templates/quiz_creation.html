@@ -11,27 +11,17 @@
     <form method="POST">
         <div>
             <table>
-                {% if request_path.rstrip('/') == "/admindb/quiz_dashboard/create_quiz" %}
-                 {% with messages = get_flashed_messages() %}
-                 {% if messages %}
-                 {% for message in messages %}
-                 <p>{{ message }}</p>
-                 {% endfor %}
-                 {% endif %}
-                 {% endwith %}
-                 {% endif %}
-                <tr>
-                    <td><label for="quiz_chap_name">Chapter Name:</label></td>
-                    <td><select name="quiz_chap_name" id="quiz_chap_name">
-                            {% for chapter in chapters %}
+                <td><label for="quiz_chap_name">Chapter Name:</label></td>
+                <td><select name="quiz_chap_name" id="quiz_chap_name">
+                        {% for chapter in chapters %}
 
-                            <option value="{{ chapter.chap_id }}" 
-                            {% if quiz and quiz.chap_id==chapter.chap_id %}selected{% endif %} data-id="{{ chapter.chap_id }}">
+                        <option value="{{ chapter.chap_id }}" {% if quiz and quiz.chap_id==chapter.chap_id %}selected{%
+                            endif %} data-id="{{ chapter.chap_id }}">
                             {{ chapter.chap_title }}
-                            </option>
-                            {% endfor %}
-                        </select>
-                    </td>
+                        </option>
+                        {% endfor %}
+                    </select>
+                </td>
                 </tr>
                 <tr>
 
@@ -54,9 +44,9 @@
                 <tr>
                     <td><label for="quiz_duration_hours">Quiz Duration:</label></td>
                     <td><input type="number" name="quiz_duration_hours" id="quiz_duration_hours" min="0" max="3"
-                           value="{{ quiz.quiz_time//60 if quiz else '' }}" placeholder="Hours" required>
+                            value="{{ quiz.quiz_time//60 if quiz else '' }}" placeholder="Hours" required>
                         <input type="number" name="quiz_duration_minute" id="quiz_duration_minute" min="0" max="59"
-                        value="{{ quiz.quiz_time%60 if quiz else '' }}" placeholder="Minutes" required>
+                            value="{{ quiz.quiz_time%60 if quiz else '' }}" placeholder="Minutes" required>
                     </td>
 
                 </tr>

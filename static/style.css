@@ -153,7 +153,7 @@
 }
 #user-table-db{
     padding: 20px !important;
-    max-width: 900px !important;
+    max-width: 1200px !important;
     
 }
 #user-table-score td{
@@ -169,7 +169,6 @@
    
     
 }
-
 
 #user-table-db td{
     text-align: center;

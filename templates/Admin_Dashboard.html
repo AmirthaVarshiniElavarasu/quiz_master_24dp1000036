@@ -7,7 +7,12 @@
 
 {% block content %}
 <center>
-    {% if request_path.rstrip('/') in ["/admindb","/Admin_Login"] %}
+    {% if request_path.rstrip('/') in ["/admindb","/Admin_Login","/admindb/create_subject"] or 
+    request_path.startswith('/admindb/edit_subject/') or 
+    request_path.startswith('/admindb/delete_subject/') or 
+    request_path.startswith('/admindb/create_chapter/') or
+    request_path.startswith('/admindb/edit_chapter/') or 
+    request_path.startswith('/admindb/delete_chapter/')%}
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
     {% for category,message in messages %}

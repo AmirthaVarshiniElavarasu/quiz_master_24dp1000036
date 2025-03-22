@@ -12,11 +12,11 @@
     <form method="POST">
         <div>
             <table>
-                {% if request_path.rstrip('/') == "/admindb/edit_subjectindb" %}
-                {% with messages = get_flashed_messages() %}
+                {% if request_path.rstrip('/') in ['/admindb/create_subject'] %}
+                {% with messages = get_flashed_messages(with_categories=True) %}
                 {% if messages %}
-                {% for message in messages %}
-                <p>{{ message }}</p>
+                {% for category,message in messages %}
+                <p class="flash-message {{ category }}">{{ message }}</p>
                 {% endfor %}
                 {% endif %}
                 {% endwith %}

@@ -9,23 +9,31 @@
 <center>
     <h2> {{ action }} Question </h2>
     <form method="POST" action="">
+        {% if request_path.startswith('/admindb/quiz_dashboard/create_question/')%}
+        {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+        {% for category,message in messages %}
+        <p class="flash-message {{ category }}">{{ message }}</p>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+        {% endif %}
         <div>
             <table>
-                 
+
                 <tr>
                     <td><label for="quiz_title">Quiz Title:</label></td>
                     <td>
-                        <input type="text" name="quiz_title" id="quiz_title"
-                            value="{{ quiz.quiz_title  }}" readonly>
-                    </td>     
-                        
+                        <input type="text" name="quiz_title" id="quiz_title" value="{{ quiz.quiz_title  }}" readonly>
+                    </td>
+
                 </tr>
-                
+
                 <tr>
                     <td><label for="ques_title">Question Title:</label></td>
                     <td>
                         <input type="text" name="ques_title" id="ques_title" required>
-                            
+
                     </td>
                 </tr>
                 <tr>
@@ -36,7 +44,7 @@
                 </tr>
             </table>
 
-            <table >
+            <table>
                 <thead>
                     <tr>
                         <th>Single Option Correct</th>
@@ -46,7 +54,7 @@
                     <tr>
                         <td>
                             <label for="1">Option 1</label>
-                            <input type="text" id="1" name="options[]"  required>
+                            <input type="text" id="1" name="options[]" required>
                         </td>
                     </tr>
                     <tr>
@@ -68,7 +76,7 @@
                                 placeholder="Please type the correct answer" required>
                         </td>
                     </tr>
-                
+
 
 
                 </tbody>
@@ -96,7 +104,7 @@
             newInput.setAttribute("name", "options[]");
             newInput.setAttribute("id", optionnum);
             newInput.required = true;
-            
+
 
 
             label.textContent = "Option " + optionnum;

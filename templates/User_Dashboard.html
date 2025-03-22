@@ -22,7 +22,7 @@
         <table id="user-table-db">
             <h1>Upcoming Quizzes</h1>
             <tr>
-                <th>ID</th>
+                <th>Quiz ID</th>
                 <th>Quiz Title</th>
                 <th>No. of Questions</th>
                 <th>Date</th>
@@ -31,6 +31,7 @@
 
             </tr>
             {% for q in quiz %}
+            {% set chap = (chapter | selectattr("chap_quiz","equalto",q.chap_id)| first) or {} %}
             <tr>
                 <td>{{ q.quiz_id }}</td>
                 <td>{{ q.quiz_title }}</td>

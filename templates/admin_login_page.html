@@ -10,7 +10,7 @@
         <h1>Welcome to Quiz Master</h1>
         <h3>Admin Log in Page</h3>
         <form method="POST" action="{{ url_for('Admin_Login') }}">
-            {% if request_path.rstrip('/') == "/Admin_Login"%}
+            {% if request_path.rstrip('/') in ["/Admin_Login","/Admin_Logout","/admindb","/admindb/quiz_dashboard/","/admindb/summary_dashboard"]%}
             {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
             {% for category,message in messages %}

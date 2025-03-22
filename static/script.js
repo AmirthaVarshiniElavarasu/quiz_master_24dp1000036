@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectElement = document.getElementById("quiz_chap_name");
     let inputElement = document.getElementById("quiz_chap_id");
 
+
+
     if (selectElement && inputElement) {
         selectElement.addEventListener("change", function () {
             let selectOption = selectElement.options[selectElement.selectedIndex];
@@ -21,6 +23,16 @@ document.addEventListener("DOMContentLoaded", function () {
             startTimer();
         }
     }
+    
+    // flash message fade out
+    setTimeout(function () {
+        let flashmessages = document.querySelectorAll(".flash-message");
+        flashmessages.forEach(function (message) {
+            message.style.transition = "opacity 0.5s";
+            message.style.opacity = "0";
+            setTimeout(() => message.remove(), 500);
+        });
+    }, 3000);
 
     let popupoverlay = document.querySelector(".popup-overlay");
     let popupbox = document.querySelector(".popup-box");
