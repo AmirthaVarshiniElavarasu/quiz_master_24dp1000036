@@ -7,36 +7,43 @@
 
 {% block content %}
 <center>
-<table>
-    <tr>
-        <th>Quiz ID :</th>
-        <td><input type="text" name="quiz_id" value="{{ quiz.quiz_id }}" readonly></td>
-    </tr>
-    <tr>
-        <th>Subject :</th>
-        <td><input type="text" name="quiz_id" value="{{ subject }}" readonly></td>
-    </tr>
-    <tr>
-        <th>Chapter :</th>
-        <td><input type="text" name="quiz_id" value="{{ chapter }}" readonly></td>
-    </tr>
+    <table>
+        <tr>
+            <th>Quiz ID :</th>
+            <td><input type="text" name="quiz_id" value="{{ quiz.quiz_id }}" readonly></td>
+        </tr>
+        <tr>
+            <th>Subject :</th>
+            <td><input type="text" name="quiz_id" value="{{ subject.sub_name }}" readonly></td>
+        </tr>
+        <tr>
+            <th>Subject Description:</th>
+            <td><input type="text" name="quiz_id" value="{{ subject.sub_Description }}" readonly></td>
+        </tr>
+        <tr>
+            <th>Chapter :</th>
+            <td><input type="text" name="quiz_id" value="{{ chapter.chap_title }}" readonly></td>
+        </tr>
+        <tr>
+            <th>Chapter Description:</th>
+            <td><input type="text" name="quiz_id" value="{{ chapter.chap_description }}" readonly></td>
+        </tr>
+        <tr>
+            <th>Number of Question :</th>
+            <td><input type="text" name="quiz_id" value="{{ quiz.question }}" readonly></td>
+        </tr>
+        <tr>
+            <th>Scheduled Date :</th>
+            <td><input type="text" name="quiz_id" value="{{ quiz.quiz_date }}" readonly></td>
+        </tr>
+        <tr>
+            <th>Duration :</th>
+            <td><input type="text" name="quiz_id" value="{{ quiz.quiz_time }}" readonly></td>
+        </tr>
+        <tr>
 
-    <tr>
-        <th>Number of Question :</th>
-        <td><input type="text" name="quiz_id" value="{{ quiz.question }}" readonly></td>
-    </tr> 
-    <tr>
-        <th>Scheduled Date :</th>
-        <td><input type="text" name="quiz_id" value="{{ quiz.quiz_date }}" readonly></td>
-    </tr> 
-    <tr>
-        <th>Duration :</th>
-        <td><input type="text" name="quiz_id" value="{{ quiz.quiz_time }}" readonly></td>
-    </tr> 
-    <tr>
-        
-        <td><a href="{{url_for('quiz_dashboard')}}"><button>Close</button></a></td>
-    </tr>
-</table>
+            <td><a href="{{url_for('quiz_dashboard')}}"><button>Close</button></a></td>
+        </tr>
+    </table>
 </center>
 {% endblock %}

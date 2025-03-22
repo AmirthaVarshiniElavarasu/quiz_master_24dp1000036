@@ -385,7 +385,7 @@ def user_view_quiz(quiz_id):
     chapter=Chapter.query.filter_by(chap_id=quiz.chap_id).first()
     subject=Subject.query.filter_by(sub_id=chapter.sub_id).first()
 
-    return render_template('user_view_quiz.html',quiz=quiz,chapter=chapter.chap_title,subject=subject.sub_name,request_path=request.path)
+    return render_template('user_view_quiz.html',quiz=quiz,chapter=chapter,subject=subject,request_path=request.path)
 
 @application.route('/admindb/admin_view_quiz/<int:quiz_id>',methods=['GET','POST'])
 def admin_view_quiz(quiz_id):
@@ -397,7 +397,7 @@ def admin_view_quiz(quiz_id):
     chapter=Chapter.query.filter_by(chap_id=quiz.chap_id).first()
     subject=Subject.query.filter_by(sub_id=chapter.sub_id).first()
 
-    return render_template('admin_view_quiz.html',quiz=quiz,chapter=chapter.chap_title,subject=subject.sub_name,request_path=request.path)
+    return render_template('admin_view_quiz.html',quiz=quiz,chapter=chapter,subject=subject,request_path=request.path)
 
 @application.route('/userdb/user_start_quiz/<int:quiz_id>',methods=['GET','POST'])
 def user_start_quiz(quiz_id):

@@ -45,6 +45,7 @@
 #index-page input[type="email"],
 #index-page input[type="password"],
 #index-page input[type="date"],
+#inex-page textarea,
 #index-page button[type="submit"],
 #index-page button {
     background-color: azure;
@@ -60,7 +61,8 @@
 #index-page input[type="password"]:hover,
 #index-page input[type="date"]:hover,
 #index-page button[type="submit"]:hover,
-#index-page button {
+#index-page button,
+#inex-page textarea {
     padding: 10px;
     border: 1px solid grey;
     border-radius: 5px;
