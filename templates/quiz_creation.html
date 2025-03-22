@@ -9,8 +9,8 @@
 <center>
     <h2>{{ action }} Quiz </h2>
     <form method="POST">
-        <div>
-            <table>
+       
+            <table id="quiz-creation-container">
                 <td><label for="quiz_chap_name">Chapter Name:</label></td>
                 <td><select name="quiz_chap_name" id="quiz_chap_name">
                         {% for chapter in chapters %}
@@ -27,18 +27,18 @@
 
                     <td><label for="quiz_chap_id">Chapter ID:</label></td>
                     <td><input type="text" name="quiz_chap_id" id="quiz_chap_id"
-                            value="{{ quiz.chap_id if quiz else chapters[0].chap_id  }}" readonly>
+                            value="{{ quiz.chap_id if quiz else chapters[0].chap_id  }}" readonly required>
                     </td>
 
                 </tr>
                 <tr>
                     <td><label for="quiz_title">Quiz Title</label></td>
                     <td><input type="text" name="quiz_title" id="quiz_title"
-                            value="{{ quiz.quiz_title if quiz else quiz_title }}" readonly></td>
+                            value="{{ quiz.quiz_title if quiz else quiz_title }}" readonly required></td>
                 </tr>
                 <tr>
                     <td><label for="quiz_date">Quiz Start Date:</label></td>
-                    <td><input type="date" name="quiz_date" id="quiz_date" value="{{ quiz.quiz_date if quiz else '' }}">
+                    <td><input type="date" name="quiz_date" id="quiz_date" value="{{ quiz.quiz_date if quiz else '' }}" required>
                     </td>
                 </tr>
                 <tr>
@@ -56,6 +56,6 @@
                 </tr>
             </table>
     </form>
-    </div>
+  
 </center>
 {% endblock %}

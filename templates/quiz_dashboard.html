@@ -8,11 +8,12 @@
 {% block content %}
 
 <center>
-    {% if request_path.rstrip('/') in ['/admindb/quiz_dashboard/create_quiz'] or 
-    request_path.startswith('/admindb/quiz_dashboard/edit_quiz/') or 
-    request_path.startswith('/admindb/quiz_dashboard/delete_quiz/') or 
-    request_path.startswith('/admindb/quiz_dashboard/edit_question/') or 
-    request_path.startswith('/admindb/quiz_dashboard/delete_question/')%}
+    {% if request_path.startswith("/admindb/quiz_dashboard") or
+    request_path.startswith("/admindb/quiz_dashboard/create_quiz") or
+    request_path.startswith("/admindb/quiz_dashboard/edit_quiz/") or
+    request_path.startswith("/admindb/quiz_dashboard/delete_quiz/") or
+    request_path.startswith("/admindb/quiz_dashboard/edit_question/") or
+    request_path.startswith("/admindb/quiz_dashboard/delete_question/")%}
     {% with messages = get_flashed_messages(with_categories=True) %}
     {% if messages %}
     {% for category,message in messages %}
@@ -25,18 +26,19 @@
         {% for quiz in quizzes %}
         <table>
             <tr>
-                
-                <td colspan="2"><h1>{{ quiz.quiz_title }}</h1></td>
-                
+                <td colspan="2">
+                    <h1>{{ quiz.quiz_title }}</h1>
+                </td>
+
                 <td>
                     <a href="{{ url_for('edit_quiz',quiz_id=quiz.quiz_id) }}"><i class="fa fa-edit"></i></a>
                     <a href="{{ url_for('delete_quiz',quiz_id=quiz.quiz_id) }}"><i class="fa fa-trash"></i></a>
-                    </td>
+                </td>
             </tr>
 
             <tr>
                 <th>No.</th>
-                <th style="white-space: nowrap;">Question Title</th>
+                <th style="width:20px; white-space: nowrap;">Question Title</th>
                 <th>Action</th>
             </tr>
             {% set ns = namespace(question_no=0) %}
@@ -44,28 +46,33 @@
             {% if question.quiz_id == quiz.quiz_id %}
             {% set ns.question_no = ns.question_no + 1 %}
             <tr>
-                <td style="text-align: center;">{{ ns.question_no }}</td>
+                <td>{{ ns.question_no }}</td>
                 <td>{{ question.ques_title }}</td>
-                <td><a href="{{ url_for('edit_question',quiz_id=quiz.quiz_id,question_id=question.ques_id) }}"><i class="fa fa-edit"></i></a>
-                    <a href="{{ url_for('delete_question',question_id=question.ques_id) }}"><i class="fa fa-trash"></i></a>
+                <td><a href="{{ url_for('edit_question',quiz_id=quiz.quiz_id,question_id=question.ques_id) }}"><i
+                            class="fa fa-edit"></i></a>
+                    <a href="{{ url_for('delete_question',question_id=question.ques_id) }}"><i
+                            class="fa fa-trash"></i></a>
                 </td>
-                
+
             </tr>
             {% endif %}
             {% endfor %}
             <tr>
-                
-                <td colspan="3" style="text-align: center;"><a href="{{ url_for('create_question',quiz_id=quiz.quiz_id) }}"><input type="button"
-                            value="Add Question"></a></td>
+                <td><a href="{{ url_for('admin_view_quiz',quiz_id=quiz.quiz_id)}}"><button
+                            id="quiz_Details">Details</button></a></td>
+                <td><a href="{{ url_for('create_question',quiz_id=quiz.quiz_id) }}"><input type="button"
+                            value="Add Question"></a>
+
+                </td>
             </tr>
-           
+
         </table>
         {% endfor %}
     </div>
     <div>
         <table>
             <tr>
-                
+
                 <td><a href="{{ url_for('create_quiz') }}"><input type="button" value="Add quiz"></a></td>
             </tr>
         </table>

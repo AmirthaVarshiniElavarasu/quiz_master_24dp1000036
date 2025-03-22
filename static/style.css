@@ -128,9 +128,12 @@
     width: 100%;
     text-align: left;
     font-size: 18px;
+}
+#quiz-creation-container{
+    width: 100%;
+    max-width: 900% !important;
 
 }
-
 .description {
     color: #555;
     text-align: left;
@@ -160,14 +163,10 @@
     text-align: center;
     padding: 8px;
     min-width: 130px;
-    
-
 }
 
 #user-table-db th,#user-table-score th{
     text-align: center;
-   
-    
 }
 
 #user-table-db td{

@@ -387,6 +387,18 @@ def user_view_quiz(quiz_id):
 
     return render_template('user_view_quiz.html',quiz=quiz,chapter=chapter.chap_title,subject=subject.sub_name,request_path=request.path)
 
+@application.route('/admindb/admin_view_quiz/<int:quiz_id>',methods=['GET','POST'])
+def admin_view_quiz(quiz_id):
+    if 'admin' not in session:
+        flash('Please Login','error')
+        return redirect(url_for('Admin_Login'))
+    
+    quiz=Quiz.query.get_or_404(quiz_id)
+    chapter=Chapter.query.filter_by(chap_id=quiz.chap_id).first()
+    subject=Subject.query.filter_by(sub_id=chapter.sub_id).first()
+
+    return render_template('admin_view_quiz.html',quiz=quiz,chapter=chapter.chap_title,subject=subject.sub_name,request_path=request.path)
+
 @application.route('/userdb/user_start_quiz/<int:quiz_id>',methods=['GET','POST'])
 def user_start_quiz(quiz_id):
     if 'name' not in session:
@@ -614,7 +626,7 @@ def delete_quiz(quiz_id):
         return redirect(url_for('quiz_dashboard'))
     data.session.delete(quiz)
     data.session.commit()
-    flash(f"{quiz.quiz_title} deleted")
+    flash(f"{quiz.quiz_title} deleted","success")
     return redirect(url_for('quiz_dashboard'))
 
 @application.route('/admindb/quiz_dashboard/create_question/<int:quiz_id>', methods=['GET','POST'])
