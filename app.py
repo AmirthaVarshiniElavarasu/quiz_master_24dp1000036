@@ -446,7 +446,7 @@ def create_subject():
        
         if Subject.query.filter_by(sub_name=sub_name).first():  
             flash('This Subject Already Exists.','error')
-            return render_template('subject.html', action="Creation")
+            return render_template('subject.html', action="Creation",request_path=request.path)
 
         sub_description = request.form.get('new_sub_descrip')
         sub_quiz_descrip = request.form.get('new_sub_quiz_descrip')
@@ -506,7 +506,7 @@ def create_chapter(sub_id):
 
         if Chapter.query.filter_by(chap_title=chap_title).first():  
             flash('This Chapter Already Exists.','success')
-            return render_template('chapter.html', action="Creation",sub_id=subject.sub_id)
+            return render_template('chapter.html', action="Creation",sub_id=subject.sub_id,request_path=request.path)
         
         new_chap = Chapter(chap_title=chap_title, chap_description=chap_description,sub_id=subject.sub_id)
         data.session.add(new_chap)
