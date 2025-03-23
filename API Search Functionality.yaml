@@ -1,0 +1,85 @@
+openapi: 3.0.0
+info:
+  title: Quiz System API
+  description: API for search functionality in the quiz system.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+    description: Local development server
+
+paths:
+  /search:
+    get:
+      summary: Search for Users, Subjects, Quizzes, Chapters, and Scores
+      description: Allows admins and users to search for various entities based on a query.
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: The search query string
+          schema:
+            type: string
+        - name: source
+          in: query
+          required: true
+          description: Identifies whether the request is from the admin or user navbar
+          schema:
+            type: string
+            enum: [admin-navbar.html, user-navbar.html]
+      responses:
+        "200":
+          description: Successfully retrieved search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Id: { type: integer }
+                        Username: { type: string }
+                        Email: { type: string }
+                        Qualification: { type: string }
+                        Gender: { type: string }
+                        Date_of_Birth: { type: string, format: date }
+                  Subjects:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Subject_Id: { type: integer }
+                        Subject_Name: { type: string }
+                  Quizzes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Quiz_Id: { type: integer }
+                        Quiz_Title: { type: string }
+                        Quiz_Chapter_Id: { type: integer }
+                        Quiz_Start_Date: { type: string, format: date }
+                        Quiz_Duration: { type: integer, description: "Duration in minutes" }
+                  Chapters:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        Chapter_Id: { type: integer }
+                        Chapter_Title: { type: string }
+                  Scores:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        User_Id: { type: integer }
+                        Quiz_Id: { type: integer }
+                        Score_Id: { type: integer }
+                        Total_Score: { type: integer }
+        "400":
+          description: Bad request - Empty search query
+        "401":
+          description: Unauthorized - User not logged in
