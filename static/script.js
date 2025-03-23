@@ -6,8 +6,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectElement = document.getElementById("quiz_chap_name");
     let inputElement = document.getElementById("quiz_chap_id");
 
-
-
     if (selectElement && inputElement) {
         selectElement.addEventListener("change", function () {
             let selectOption = selectElement.options[selectElement.selectedIndex];
@@ -170,8 +168,6 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.warn("Admin chartData not found. Skipping admin charts.");
     }
-
-
 
 
     // Handle User Chart Data
